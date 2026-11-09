@@ -1,0 +1,58 @@
+# Snitchboard .gitignore
+#
+# The purpose of this file is to make it hard to commit something that must
+# never be public: real network data, credentials, local tooling state and
+# compiled files. Review it before relaxing any rule.
+
+# Desktop and editor state
+.directory
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local AI tooling state (decide deliberately what, if anything, to commit)
+.claude/
+
+# Credentials and environment files
+.env
+.env.*
+*.pem
+*.key
+
+# Real network data: OpenSnitch databases, slices, run records and logs.
+# Demo fixtures are synthetic and live under fixtures/, where they are added
+# explicitly and checked by the fixture test.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+slice-*.json
+runs-local/
+plugin-data/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+*.egg-info/
+
+# Node (only if a development-time tool is ever used; nothing is bundled)
+node_modules/
+
+# Local scratch output
+scratch/
+tmp/

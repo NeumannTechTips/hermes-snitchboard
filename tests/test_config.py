@@ -37,6 +37,25 @@ class Config(unittest.TestCase):
             with self.assertRaises(ValueError, msg=str(bad)):
                 config.load(bad)
 
+    def test_trimmed_max_bytes_defaults_to_8_kib(self):
+        self.assertEqual(config.load()["trimmed_max_bytes"], 8192)
+        self.assertIn("trimmed_max_bytes", config.PLUGIN_DEFAULTS)
+        self.assertIn("telemetry_destinations", config.PLUGIN_DEFAULTS)
+        self.assertNotIn("telemetry_destinations", config.ENGINE_DEFAULTS)
+
+    def test_trimmed_max_bytes_is_bounded(self):
+        for good in (1024, 8192, 200 * 1024):
+            self.assertEqual(config.load({"trimmed_max_bytes": good})["trimmed_max_bytes"], good)
+        for bad in (1023, 0, -1, 200 * 1024 + 1, True, 8192.0, "8192", None):
+            with self.subTest(bad=bad), self.assertRaisesRegex(ValueError, "trimmed_max_bytes"):
+                config.load({"trimmed_max_bytes": bad})
+
+    def test_telemetry_destinations_must_be_strings(self):
+        self.assertEqual(config.load({"telemetry_destinations": ["t.example.net"]})
+                         ["telemetry_destinations"], ["t.example.net"])
+        with self.assertRaisesRegex(ValueError, "telemetry_destinations"):
+            config.load({"telemetry_destinations": [1]})
+
     def test_defaults_are_not_shared_between_loads(self):
         first = config.load()
         first["ai_process_names"].append("x")

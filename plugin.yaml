@@ -54,3 +54,11 @@ config_schema:
     type: int
     default: 14
     description: Days a record stays in full form before it is trimmed, never deleted.
+  telemetry_destinations:
+    type: list
+    default: []
+    description: Third-party telemetry destinations; AI tooling reaching one is a medium-severity finding.
+  trimmed_max_bytes:
+    type: int
+    default: 8192
+    description: Byte cap for a trimmed record, from 1024 to 204800. Trimming fails rather than drop destinations.

@@ -50,6 +50,14 @@ class PluginYaml(unittest.TestCase):
             literal = json.dumps(default) if not isinstance(default, str) else (default or '""')
             self.assertEqual(entries[key]["default"], literal, key)
 
+    def test_settings_added_in_prd_1_1_are_declared(self):
+        _, entries = schema_entries()
+        self.assertEqual(entries["telemetry_destinations"], {"type": "list", "default": "[]"})
+        self.assertEqual(entries["trimmed_max_bytes"], {"type": "int", "default": "8192"})
+
+    def test_manifest_text_has_no_em_dash(self):
+        self.assertNotIn("\u2014", (REPO / "plugin.yaml").read_text(encoding="utf-8"))
+
 
 class DashboardManifest(unittest.TestCase):
     def test_fields(self):

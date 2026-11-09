@@ -15,7 +15,7 @@ link, never as verified.
 
 import copy
 
-from . import schema
+from . import config, schema
 from .canonical import canonical_bytes, sha256_of
 
 LINK_VERIFIED = "verified"
@@ -82,8 +82,11 @@ def _summarise_detection(det, limit):
     }
 
 
-def trim(record, text_limit=160):
+def trim(record, text_limit=160, max_bytes=None):
     """Return the trimmed form of a sealed full record.
+
+    `max_bytes` is the trimmed-record cap from the trimmed_max_bytes setting;
+    None means that setting's default.
 
     Summary detections keep every mandatory field, shortened, so the strict
     schema still holds. If the trimmed record exceeds its cap, the lowest
@@ -93,6 +96,8 @@ def trim(record, text_limit=160):
     """
     if record.get("trimmed"):
         raise ValueError("record is already trimmed")
+    if max_bytes is None:
+        max_bytes = config.PLUGIN_DEFAULTS["trimmed_max_bytes"]
     original = record["integrity"]
     if content_digest(record) != original["content_sha256"]:
         raise ValueError(f"{record.get('run_id')}: content does not match its "
@@ -120,12 +125,12 @@ def trim(record, text_limit=160):
             "run_index": original["run_index"],
         }
         candidate["integrity"] = integrity
-        if len(canonical_bytes(candidate)) <= schema.CAPS["trimmed_bytes"]:
+        if len(canonical_bytes(candidate)) <= max_bytes:
             return candidate
         if dropped >= len(detections):
             raise TrimError(
                 f"{record.get('run_id')}: {len(base['destinations'])} destinations "
-                f"do not fit in {schema.CAPS['trimmed_bytes']} bytes")
+                f"do not fit in {max_bytes} bytes")
         dropped += 1
 
 

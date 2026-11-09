@@ -1,13 +1,13 @@
-# Snitchboard: product requirements
+# Hermes Snitchboard: product requirements
 
 | Field | Detail |
 |---|---|
 | Document ID | HSB-PRD-001 |
-| Version | 1.1, approved |
+| Version | 1.2, approved |
 | Date | 9 November 2026 |
 | Owner | NeumannTechTips |
 | Repository | `NeumannTechTips/hermes-snitchboard` (private until the gate in section 11.3 passes) |
-| Plugin name | `hermes-snitchboard`, display title "Snitchboard" |
+| Plugin name | `hermes-snitchboard`, display title "Hermes Snitchboard" |
 | Target | Hermes Agent v0.23.0 or later, Linux |
 | Status | **Approved for build on 9 November 2026.** Scope decision: full-fidelity port, built in priority tiers |
 
@@ -19,7 +19,7 @@ Hermes Agent runs shell commands, calls tools and reaches the network on its own
 
 An operating-system firewall such as OpenSnitch already observes every outbound connection together with the process responsible. That evidence is rich, yet it sits in a database few people open, and nothing in it distinguishes routine traffic from a destination seen for the first time, a heartbeat, or a connection made by AI tooling. Records held as ordinary rows can also be altered afterwards without anyone noticing.
 
-Snitchboard closes that gap. It presents OpenSnitch connection evidence as a tab inside the Hermes dashboard: plain-language findings mapped to MITRE ATT&CK, with a hash chain that makes alteration of the stored history detectable.
+Hermes Snitchboard closes that gap. It presents OpenSnitch connection evidence as a tab inside the Hermes dashboard: plain-language findings mapped to MITRE ATT&CK, with a hash chain that makes alteration of the stored history detectable.
 
 ## 2. Success criteria
 
@@ -103,7 +103,7 @@ Two further points are favourable. The existing charts are already inline SVG dr
 | NFR1 | Standard library only. No bundler, no minifier, no vendored binary, no committed bytecode. Every source file is readable as committed |
 | NFR2 | The tab loads nothing from an external host. No fonts, no scripts, no images, no stylesheets. Colour and type come from the dashboard theme variables |
 | NFR3 | Route handlers never block the event loop. Use `async def` with `asyncio.to_thread`, or a plain `def` handler |
-| NFR4 | A full run record is capped at 200 KiB, a trimmed record at 8 KiB, and every response is bounded in both size and count |
+| NFR4 | A full run record is capped at 200 KiB, a trimmed record at `trimmed_max_bytes` (default 8 KiB), and every response is bounded in both size and count |
 | NFR5 | The initial tab load transfers no more than one full record plus the run summaries |
 | NFR6 | Tests complete in under one minute, with no network access and no OpenSnitch present |
 | NFR7 | The tab is legible in both the light and the dark dashboard themes |
@@ -237,7 +237,7 @@ All routes sit beneath `/api/plugins/hermes-snitchboard/`, behind the dashboard 
 
 | Route | Returns |
 |---|---|
-| `GET /health` | Mode, runs directory status, record count, schema version |
+| `GET /health` | Mode, the settings source, the runs directory path and its status, record count, schema version. The path is masked unless `reveal` is passed, because this route is the only way an operator can see it: the dashboard auth gate makes the endpoint unreadable from a browser address bar |
 | `GET /settings` | Effective settings, excluding anything sensitive |
 | `GET /runs?limit=&offset=` | Run summaries only: identifier, window, status, severity counts, trimmed flag. Bounded and paginated |
 | `GET /runs/latest` | The most recent full record, redacted unless reveal is requested |
@@ -247,7 +247,7 @@ All routes sit beneath `/api/plugins/hermes-snitchboard/`, behind the dashboard 
 
 ### 7.8 Settings
 
-Declared through `config_schema`: `runs_dir`, `mode` (`auto`, `demo`, `live`), `ai_process_names`, `agent_accounts`, `expected_services`, `provider_allowlist`, `unattended_hours`, `redact_by_default` (default true), `allow_reveal`, `retention_days` (default 14), `telemetry_destinations` (the list feeding the medium-severity rule in 7.6) and `trimmed_max_bytes` (default 8192). Defaults are neutral and name no particular machine.
+Declared through `config_schema`: `runs_dir`, `mode` (`auto`, `demo`, `live`), `ai_process_names`, `agent_accounts`, `expected_services`, `provider_allowlist`, `unattended_hours`, `redact_by_default` (default true), `allow_reveal`, `retention_days` (default 14), `telemetry_destinations` (the list feeding the medium-severity rule in 7.6) and `trimmed_max_bytes` (default 8192, accepted range 1024 to 204800). Defaults are neutral and name no particular machine. Lowering `trimmed_max_bytes` marks records already trimmed under a larger cap as malformed, which is honest rather than silent, and the setting's description must say so.
 
 ### 7.9 Interface inventory and priority tiers
 
@@ -351,7 +351,7 @@ Never cut: redaction, demonstration mode, chain verification, the caveat notes, 
 
 ```yaml
 name: hermes-snitchboard
-title: Snitchboard
+title: Hermes Snitchboard
 repo: https://github.com/NeumannTechTips/hermes-snitchboard
 sha: <forty characters, set at release>
 description: "Dashboard-only: ..."   # carries the disclosure in 11.2
@@ -395,7 +395,7 @@ Every item must pass before the repository is made public.
 | R4 | Seventeen interface elements is a large surface for the time available | Tier order in 9.1, with an explicit list of what is never cut |
 | R5 | An identifier slips into history or an image | Strict ignore rules, fixture range test, history scan and manual review at the gate |
 | R6 | OpenSnitch database layout varies between versions | The collector checks the schema first and records `no_data` or `partial` with an explanation rather than guessing |
-| R7 | A reviewer sees overlap with application-layer tooling such as privacy-xray | The README states the distinction plainly: application tooling records what the agent sent, Snitchboard records what the operating system observed leaving |
+| R7 | A reviewer sees overlap with application-layer tooling such as privacy-xray | The README states the distinction plainly: application tooling records what the agent sent, Hermes Snitchboard records what the operating system observed leaving |
 | R8 | The project avatar is the Nous Research character mark, which a reviewer could read as implying endorsement | The unofficial notice sits directly beneath the header, and the README carries an explicit credit and non-endorsement statement. Replacing the avatar is a one-line change if a reviewer objects |
 
 ## 13. Open questions
@@ -422,6 +422,8 @@ Every item must pass before the repository is made public.
 | D8 | The integrity claim is scoped to full records and to chain order. Trimmed summaries are derived aids rather than evidence, and the interface states this | 9 November 2026 |
 | D9 | Trimming fails loudly when the destination list will not fit the cap. Storing destination digests instead is deferred to a later version | 9 November 2026 |
 | D10 | A known process means one that can be identified, since trimmed history keeps no process names. A run with status `no_data` is excluded from the novelty denominator | 9 November 2026 |
+| D11 | The plugin is called Hermes Snitchboard wherever a reader sees it, including the catalogue `title`. The short form is reserved for the directory and package name `hermes-snitchboard` | 10 November 2026 |
+| D12 | The connections chart draws one column per stored run, so an hour with no run at all is absent from it rather than shown as zero. The coverage strip is the panel that answers that question, and the chart caption says so | 10 November 2026 |
 
 ## 15. Sources
 
@@ -442,5 +444,6 @@ Every item must pass before the repository is made public.
 | Date | Version | Change |
 |---|---|---|
 | 9 November 2026 | 0.1 | Draft created for sign-off |
+| 10 November 2026 | 1.2 | Resolutions from the third build session: the full name adopted everywhere a reader sees it, NFR4 aligned with the `trimmed_max_bytes` setting, the `/health` description corrected, the cap-lowering consequence recorded, and decisions D11 and D12 added |
 | 9 November 2026 | 1.1 | Resolutions from the first build session recorded: SC6 scoped to full records and chain order, `destinations` carried by both forms, trimmed detections shortened rather than reduced, `telemetry_destinations` and `trimmed_max_bytes` added to 7.8, the beacon ceiling limitation noted, and decisions D7 to D10 added |
 | 9 November 2026 | 1.0 | Approved. Scope widened to a full-fidelity port with seventeen interface elements in three tiers. Section 5 added, recording schema inconsistency and the trimming effect on novelty. Schema in 7.3 made strict, with a declared trimmed form. Front-end conventions added at 7.10. Routes extended with pagination and a series endpoint. Decisions D1 to D6 recorded. The earlier assumptions about cross-account access are closed by D3 |

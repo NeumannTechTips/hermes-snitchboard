@@ -23,6 +23,11 @@ _HOST_TALLIES = {"hosts", "addrs"}
 _PROCESS_KEYS = {"process", "processes"}
 
 
+def mask_home(text):
+    """Mask the account name in every /home/<name> segment of a string."""
+    return _HOME.sub("/home/[user]", text)
+
+
 class _Masker:
     def __init__(self):
         self.maps = {"host": {}, "ip": {}, "mac": {}}
@@ -54,7 +59,7 @@ class _Masker:
             if host in value:
                 value = re.sub(rf"(?<![\w.-]){re.escape(host)}(?![\w-])",
                                self.token("host", host), value)
-        return _HOME.sub("/home/[user]", value)
+        return mask_home(value)
 
     def _ip_or_keep(self, candidate):
         try:
@@ -67,7 +72,7 @@ class _Masker:
         if not value:
             return value
         path, _, args = value.partition(" ")
-        path = _HOME.sub("/home/[user]", path)
+        path = mask_home(path)
         return f"{path} [arguments masked]" if args.strip() else path
 
 

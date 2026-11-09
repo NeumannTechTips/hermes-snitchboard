@@ -165,11 +165,14 @@ class PathTraversal(RunsDirCase):
         self.assertEqual(health["runs_dir"]["status"], "invalid")
         self.assertEqual(health["record_count"], 0)
 
-    def test_no_route_reports_a_filesystem_path(self):
-        bodies = [api.health_body(), api.settings_body(), api.runs_body(5, 0),
-                  api.series_body(24), api.verify_body()]
+    def test_no_route_but_health_reports_a_filesystem_path(self):
+        bodies = [api.settings_body(), api.runs_body(5, 0), api.series_body(24),
+                  api.verify_body(), api.latest_body(None), api.run_body(FULL, None)]
         for body in bodies:
             self.assertNotIn(str(self.tmp), json.dumps(body))
+        # /health reports the resolved directory on purpose, so an operator
+        # behind the dashboard auth gate can see it inside the tab.
+        self.assertEqual(api.health_body()["runs_dir"]["path"], str(self.runs))
 
 
 class Bounds(RunsDirCase):
@@ -368,6 +371,76 @@ class RevealDisabled(RunsDirCase):
         self.assertFalse(api.latest_body(None)["revealed"])
 
 
+class HealthPath(RunsDirCase):
+    HOME_RUNS = "/home/test-user/runs"
+
+    def health(self, reveal=None, **settings):
+        raw = {"runs_dir": self.HOME_RUNS, "mode": "live", **settings}
+        with mock.patch.object(api, "_read_raw_settings", return_value=(raw, "file")):
+            return api.health_body(reveal)
+
+    def test_a_home_path_is_masked_by_default(self):
+        body = self.health()
+        self.assertEqual(body["runs_dir"], {
+            "location": "custom", "status": "missing",
+            "path": "/home/[user]/runs", "path_masked": True})
+        self.assertNotIn("test-user", json.dumps(body))
+        self.assertEqual(body["settings_source"], "file")
+
+    def test_reveal_shows_the_path(self):
+        runs_dir = self.health(True)["runs_dir"]
+        self.assertEqual(runs_dir["path"], self.HOME_RUNS)
+        self.assertFalse(runs_dir["path_masked"])
+        self.assertTrue(self.health(False)["runs_dir"]["path_masked"])
+
+    def test_reveal_is_refused_when_disabled(self):
+        with self.assertRaises(HTTPException) as caught:
+            self.health(True, allow_reveal=False)
+        self.assertEqual(caught.exception.status_code, 403)
+        self.assertTrue(self.health(None, allow_reveal=False)["runs_dir"]["path_masked"])
+
+    def test_redact_by_default_false_shows_the_path(self):
+        runs_dir = self.health(None, redact_by_default=False)["runs_dir"]
+        self.assertEqual(runs_dir["path"], self.HOME_RUNS)
+        self.assertFalse(runs_dir["path_masked"])
+
+    def test_the_default_location_is_reported_and_masked(self):
+        with mock.patch.object(api, "_default_data_dir",
+                               return_value=Path("/home/test-user/.hermes/plugin-data/x")):
+            body = self.health(runs_dir="")
+        self.assertEqual(body["runs_dir"]["location"], "default")
+        self.assertEqual(body["runs_dir"]["path"], "/home/[user]/.hermes/plugin-data/x/runs")
+
+    def test_a_relative_path_is_reported_as_configured(self):
+        runs_dir = self.health(runs_dir="runs")["runs_dir"]
+        self.assertEqual((runs_dir["status"], runs_dir["path"]), ("invalid", "runs"))
+
+    def test_a_long_path_stays_within_bounds(self):
+        body = self.health(True, runs_dir="/srv/" + "d" * 100_000)
+        self.assertLessEqual(len(body["runs_dir"]["path"]), api.RUNS_DIR_CHARS)
+        self.assertLessEqual(size_of(body), api.RESPONSE_MAX_BYTES)
+
+
+class TrimmedCapSetting(RunsDirCase):
+    def test_default_cap_keeps_trimmed_fixtures_valid(self):
+        self.assertEqual(api.runs_body(200, 0)["malformed_on_page"], 0)
+
+    def test_a_smaller_cap_makes_trimmed_records_malformed(self):
+        with mock.patch.object(api, "_read_raw_settings", return_value=(
+                {"runs_dir": str(self.runs), "mode": "live", "trimmed_max_bytes": 1024},
+                "test")):
+            body = api.runs_body(200, 0)
+            by_id = {r["run_id"]: r for r in body["runs"]}
+            self.assertTrue(by_id[TRIMMED]["malformed"])
+            self.assertIn("above the cap of 1024", by_id[TRIMMED]["problems"][-1])
+            self.assertFalse(by_id[FULL]["malformed"])
+            self.assertEqual(body["malformed_on_page"], 24)
+            self.assertTrue(api.run_body(TRIMMED, None)["malformed"])
+            self.assertEqual(api.verify_body()["malformed_records"], 24)
+        # The cached verdict under the smaller cap is not served afterwards.
+        self.assertFalse(api.runs_body(200, 0)["runs"][-1]["malformed"])
+
+
 class Modes(RunsDirCase):
     def test_auto_mode_uses_demonstration_data_when_no_records_exist(self):
         empty = self.tmp / "empty"
@@ -406,6 +479,18 @@ class Modes(RunsDirCase):
         self.assertEqual(body["settings"]["runs_dir"], "custom")
         self.assertEqual(body["settings"]["trimmed_max_bytes"], 8192)
 
+    def test_settings_report_the_prd_1_1_settings_and_the_caps(self):
+        raw = {"runs_dir": str(self.runs), "mode": "live", "trimmed_max_bytes": 16384,
+               "telemetry_destinations": ["telemetry.example.net"]}
+        with mock.patch.object(api, "_read_raw_settings", return_value=(raw, "test")):
+            body = api.settings_body()
+        self.assertEqual(body["settings"]["trimmed_max_bytes"], 16384)
+        self.assertEqual(body["settings"]["telemetry_destinations"], ["telemetry.example.net"])
+        self.assertEqual(body["caps"], {"rows": 120, "volume_rows": 45, "hosts": 20,
+                                        "addrs": 15, "novel": 15, "beacons": 16,
+                                        "aggregates": 20})
+        self.assertEqual(set(body["settings"]), set(api.config.PLUGIN_DEFAULTS))
+
 
 class Router(unittest.TestCase):
     def test_every_route_is_a_get_and_none_blocks(self):
@@ -438,7 +523,7 @@ class OverHttp(RunsDirCase):
         return self.client.get(self.PREFIX + path)
 
     def test_routes_answer(self):
-        for path in ("/health", "/settings", "/runs?limit=3", "/runs/latest",
+        for path in ("/health", "/health?reveal=true", "/health?reveal=false", "/settings", "/runs?limit=3", "/runs/latest",
                      f"/runs/{FULL}", "/series?n=24", "/verify"):
             with self.subTest(path=path):
                 self.assertEqual(self.get(path).status_code, 200)
@@ -457,6 +542,17 @@ class OverHttp(RunsDirCase):
             with self.subTest(method=method):
                 response = getattr(self.client, method)(self.PREFIX + "/runs/latest")
                 self.assertEqual(response.status_code, 405)
+
+    def test_health_reveal_over_http(self):
+        masked = self.get("/health").json()["runs_dir"]
+        shown = self.get("/health?reveal=true").json()["runs_dir"]
+        self.assertTrue(masked["path_masked"])
+        self.assertFalse(shown["path_masked"])
+        self.assertEqual(shown["path"], str(self.runs))
+        self.assertEqual(self.get("/health?reveal=maybe").status_code, 422)
+        with mock.patch.object(api, "_read_raw_settings", return_value=(
+                {"runs_dir": str(self.runs), "mode": "live", "allow_reveal": False}, "test")):
+            self.assertEqual(self.get("/health?reveal=true").status_code, 403)
 
     def test_paging_type_errors_are_rejected(self):
         self.assertEqual(self.get("/runs?limit=abc").status_code, 422)

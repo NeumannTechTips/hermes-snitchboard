@@ -1,4 +1,4 @@
-"""Read-only routes for the Snitchboard tab (HSB-PRD-001 section 7.7).
+"""Read-only routes for the Hermes Snitchboard tab (HSB-PRD-001 section 7.7).
 
 Mounted by the dashboard under /api/plugins/hermes-snitchboard/. Every route
 is a GET and nothing here writes to disk.
@@ -82,8 +82,10 @@ VERIFY_BREAKS_SHOWN = 20
 VERIFY_BUDGET_S = 40.0
 RECORD_RESPONSE_MAX_BYTES = 512 * 1024
 RESPONSE_MAX_BYTES = 256 * 1024
+# A configured runs_dir is free text, so the path /health reports is cut here.
+RUNS_DIR_CHARS = 1024
 
-SETTING_KEYS = tuple(config.PLUGIN_DEFAULTS) + ("telemetry_destinations",)
+SETTING_KEYS = tuple(config.PLUGIN_DEFAULTS)
 
 TRIMMED_NOTICE = (
     "Trimmed records keep a shortened summary. The chain attests to their "
@@ -205,7 +207,11 @@ class _Context:
         configured = self.settings["runs_dir"]
         self.runs_dir_kind = "custom" if configured else "default"
         live_dir = Path(configured) if configured else _default_data_dir() / "runs"
+        # Reported by /health only, so an operator who cannot read the server
+        # can still see which directory the tab resolved.
+        self.runs_dir_path = str(live_dir)
         self.runs_dir_status = _dir_status(live_dir)
+        self.trimmed_cap = self.settings["trimmed_max_bytes"]
         live, live_truncated = ({}, False)
         if self.runs_dir_status == "ok":
             live, live_truncated = _list_runs(live_dir)
@@ -268,26 +274,30 @@ def _masked_problems(problems, record):
     return [p.split(":", 1)[0] for p in problems]
 
 
-def _check(record, read_problems, run_id):
-    """Return the full problem list for one record, or [] when it is valid."""
+def _check(record, read_problems, run_id, trimmed_cap):
+    """Return the full problem list for one record, or [] when it is valid.
+
+    `trimmed_cap` is the trimmed_max_bytes setting in force for the request.
+    """
     if read_problems:
         return list(read_problems)
-    problems = schema.validate(record)
+    problems = schema.validate(record, trimmed_cap=trimmed_cap)
     if isinstance(record, dict) and record.get("run_id") != run_id:
         problems.append("record.run_id: does not match the file name")
     return problems
 
 
-# Summaries are cached by file identity, so an unchanged file is not parsed
-# again on every listing.
+# Summaries are cached by file identity and by the trimmed-record cap, so an
+# unchanged file is not parsed again on every listing, and a changed cap is
+# never answered from a verdict reached under the old one.
 _cache_lock = threading.Lock()
 _summary_cache = {}
 
 
-def _summary(run_id, path):
+def _summary(run_id, path, trimmed_cap):
     try:
         info = os.lstat(path)
-        key = (path, info.st_mtime_ns, info.st_size, info.st_ino)
+        key = (path, info.st_mtime_ns, info.st_size, info.st_ino, trimmed_cap)
     except OSError:
         key = None
     if key is not None:
@@ -296,7 +306,7 @@ def _summary(run_id, path):
         if hit is not None and hit[0] == key:
             return hit[1]
     record, read_problems = _read_record(path)
-    problems = _check(record, read_problems, run_id)
+    problems = _check(record, read_problems, run_id, trimmed_cap)
     if problems:
         summary = {
             "run_id": run_id, "malformed": True,
@@ -356,7 +366,7 @@ def _parse_reveal(ctx, reveal):
 
 def _record_payload(ctx, run_id, reveal, **extra):
     record, read_problems = _read_record(ctx.runs[run_id])
-    problems = _check(record, read_problems, run_id)
+    problems = _check(record, read_problems, run_id, ctx.trimmed_cap)
     if problems:
         return ctx.envelope(
             run_id=run_id, malformed=True, revealed=False,
@@ -369,18 +379,21 @@ def _record_payload(ctx, run_id, reveal, **extra):
 
 # ------------------------------------------------------- route bodies
 
-def health_body():
+def health_body(reveal=None):
     ctx = _Context()
-    return ctx.envelope(
+    reveal = _parse_reveal(ctx, reveal)
+    path = ctx.runs_dir_path if reveal else redact.mask_home(ctx.runs_dir_path)
+    return _bounded(ctx.envelope(
         plugin=PLUGIN,
         schema_version=schema.SCHEMA_VERSION,
         mode_setting=ctx.settings["mode"],
-        runs_dir={"location": ctx.runs_dir_kind, "status": ctx.runs_dir_status},
+        runs_dir={"location": ctx.runs_dir_kind, "status": ctx.runs_dir_status,
+                  "path": path[:RUNS_DIR_CHARS], "path_masked": not reveal},
         record_count=len(ctx.runs),
         records_truncated=ctx.truncated,
         settings_source=ctx.settings_source,
         settings_problems=ctx.settings_problems,
-    )
+    ))
 
 
 def settings_body():
@@ -388,9 +401,12 @@ def settings_body():
     effective = {k: ctx.settings[k] for k in SETTING_KEYS if k != "runs_dir"}
     # The directory path is withheld: under /home it names an account.
     effective["runs_dir"] = ctx.runs_dir_kind
-    effective["trimmed_max_bytes"] = schema.CAPS["trimmed_bytes"]
-    return ctx.envelope(settings=effective, source=ctx.settings_source,
-                        problems=ctx.settings_problems)
+    caps = {name: schema.CAPS[name] for name in
+            ("rows", "volume_rows", "hosts", "addrs", "novel", "beacons")}
+    caps["aggregates"] = ctx.settings["aggregate_cap"]
+    return _bounded(ctx.envelope(settings=effective, caps=caps,
+                                 source=ctx.settings_source,
+                                 problems=ctx.settings_problems))
 
 
 def runs_body(limit, offset):
@@ -401,7 +417,8 @@ def runs_body(limit, offset):
     limit = min(limit, RUNS_LIMIT_MAX)
     ctx = _Context()
     page = ctx.newest_first[offset:offset + limit]
-    items = [_public(_summary(run_id, ctx.runs[run_id])) for run_id in page]
+    items = [_public(_summary(run_id, ctx.runs[run_id], ctx.trimmed_cap))
+             for run_id in page]
     newest = ctx.newest_first[0] if ctx.newest_first else None
     return _bounded(ctx.envelope(
         total=len(ctx.newest_first), limit=limit, offset=offset,
@@ -415,7 +432,7 @@ def latest_body(reveal):
     reveal = _parse_reveal(ctx, reveal)
     chosen, fallback, skipped = None, None, []
     for run_id in ctx.newest_first:
-        summary = _summary(run_id, ctx.runs[run_id])
+        summary = _summary(run_id, ctx.runs[run_id], ctx.trimmed_cap)
         if summary["malformed"]:
             if len(skipped) < PROBLEMS_SHOWN:
                 skipped.append(run_id)
@@ -449,7 +466,7 @@ def series_body(n):
     ctx = _Context()
     points = []
     for run_id in reversed(ctx.newest_first[:n]):
-        summary = _summary(run_id, ctx.runs[run_id])
+        summary = _summary(run_id, ctx.runs[run_id], ctx.trimmed_cap)
         point = {"run_id": run_id, "malformed": summary["malformed"]}
         if not summary["malformed"]:
             point.update(started_at=summary["started_at"], status=summary["status"],
@@ -469,7 +486,7 @@ def verify_body():
                 ctx, f"verification stopped after {len(records)} of "
                      f"{len(oldest_first)} records to stay within the time budget"))
         record, read_problems = _read_record(ctx.runs[run_id])
-        problems = _check(record, read_problems, run_id)
+        problems = _check(record, read_problems, run_id, ctx.trimmed_cap)
         if problems:
             malformed[run_id] = _masked_problems(problems, record)[:1]
         usable = (isinstance(record, dict) and isinstance(record.get("integrity"), dict)
@@ -524,8 +541,8 @@ router = APIRouter()
 
 
 @router.get("/health")
-async def health():
-    return await asyncio.to_thread(health_body)
+async def health(reveal: Optional[bool] = None):
+    return await asyncio.to_thread(health_body, reveal)
 
 
 @router.get("/settings")

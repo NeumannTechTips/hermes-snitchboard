@@ -19,12 +19,17 @@ PLUGIN_DEFAULTS = {
     "redact_by_default": True,
     "allow_reveal": True,
     "retention_days": 14,
+    "telemetry_destinations": [],
+    "trimmed_max_bytes": 8192,
 }
 
+# Bounds for trimmed_max_bytes. The ceiling is the full-record cap in
+# schema.CAPS, written as a literal because schema is not imported here; a
+# test keeps the two equal.
+TRIMMED_MAX_BYTES_FLOOR = 1024
+TRIMMED_MAX_BYTES_CEILING = 200 * 1024
+
 ENGINE_DEFAULTS = {
-    # Section 7.6 names third-party telemetry but section 7.8 has no setting
-    # for it. Kept here, empty, until the PRD decides where it belongs.
-    "telemetry_destinations": [],
     "standard_ports": [53, 80, 123, 443, 853],
     "web_ports": [80, 443],
     "dns_ports": [53, 853],
@@ -85,6 +90,10 @@ def load(overrides=None):
     return cfg
 
 
+def is_integer(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
 def check(cfg):
     problems = []
     for key in _LIST_OF_STR:
@@ -115,6 +124,11 @@ def check(cfg):
         value = cfg[key]
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
             problems.append(f"{key} must be a non-negative integer")
+    limit = cfg["trimmed_max_bytes"]
+    if is_integer(limit) and not (
+            TRIMMED_MAX_BYTES_FLOOR <= limit <= TRIMMED_MAX_BYTES_CEILING):
+        problems.append(f"trimmed_max_bytes must lie between {TRIMMED_MAX_BYTES_FLOOR} "
+                        f"and {TRIMMED_MAX_BYTES_CEILING}")
     if not problems and cfg["beacon_min_mean_s"] > cfg["beacon_max_mean_s"]:
         problems.append("beacon_min_mean_s must not exceed beacon_max_mean_s")
     return problems

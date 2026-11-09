@@ -39,6 +39,7 @@ CAPS = {
     "beacons": 16,
     "coverage_slots": 24,
     "full_bytes": 200 * 1024,
+    # The default for the trimmed_max_bytes setting; a test keeps the two equal.
     "trimmed_bytes": 8 * 1024,
 }
 
@@ -46,12 +47,18 @@ GENESIS_SHA256 = "0" * 64
 
 # A run identifier is derived from the UTC instant of started_at. The suffix
 # Z is truthful because the instant is converted, not relabelled.
-RUN_ID_PATTERN = re.compile(r"^run-\d{8}T\d{6}Z$")
+#
+# Every identifier pattern is compiled with re.ASCII and applied with
+# fullmatch. Without re.ASCII, \d accepts digits from other scripts, and
+# without fullmatch, $ accepts a single trailing newline. The patterns are
+# also anchored with \A and \Z, so a caller using match() stays safe.
+RUN_ID_PATTERN = re.compile(r"\Arun-\d{8}T\d{6}Z\Z", re.ASCII)
 
-_TIMESTAMP = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$"
+TIMESTAMP_PATTERN = re.compile(
+    r"\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})\Z",
+    re.ASCII,
 )
-_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+SHA256_PATTERN = re.compile(r"\A[0-9a-f]{64}\Z", re.ASCII)
 
 COMMON_FIELDS = (
     "schema_version", "run_id", "started_at", "window_start", "window_end",
@@ -127,7 +134,7 @@ def parse_timestamp(value):
     A naive timestamp is rejected rather than assumed to be UTC, because
     assuming would relabel a local time.
     """
-    if not isinstance(value, str) or not _TIMESTAMP.match(value):
+    if not isinstance(value, str) or not TIMESTAMP_PATTERN.fullmatch(value):
         raise ValueError(f"not an ISO 8601 timestamp with an offset: {value!r}")
     text = value[:-1] + "+00:00" if value.endswith("Z") else value
     parsed = datetime.fromisoformat(text)
@@ -206,7 +213,7 @@ class _Checker:
             self.fail(path, str(exc))
 
     def sha(self, value, path):
-        if not isinstance(value, str) or not _SHA256.match(value):
+        if not isinstance(value, str) or not SHA256_PATTERN.fullmatch(value):
             self.fail(path, "expected 64 lowercase hexadecimal characters")
 
     def str_list(self, value, path, cap=None, sorted_unique=False):
@@ -398,8 +405,12 @@ def _check_aggregates(c, agg, path, aggregate_cap):
                     c.string(rule.get(name), f"{rpath}.{name}")
 
 
-def validate(record, aggregate_cap=20):
-    """Return a list of human-readable problems; an empty list means valid."""
+def validate(record, aggregate_cap=20, trimmed_cap=None):
+    """Return a list of human-readable problems; an empty list means valid.
+
+    `trimmed_cap` is the byte cap for a trimmed record, taken from the
+    trimmed_max_bytes setting. None means the default cap.
+    """
     c = _Checker()
     if not isinstance(record, dict):
         c.fail("record", f"expected an object, found {type(record).__name__}")
@@ -415,7 +426,7 @@ def validate(record, aggregate_cap=20):
         c.fail("record.schema_version",
                f"expected {SCHEMA_VERSION}, found {record.get('schema_version')!r}")
     run_id = record.get("run_id")
-    if not isinstance(run_id, str) or not RUN_ID_PATTERN.match(run_id):
+    if not isinstance(run_id, str) or not RUN_ID_PATTERN.fullmatch(run_id):
         c.fail("record.run_id", f"does not match the run identifier pattern: {run_id!r}")
     for name in ("started_at", "window_start", "window_end"):
         c.timestamp(record.get(name), f"record.{name}")
@@ -461,7 +472,10 @@ def validate(record, aggregate_cap=20):
     except (TypeError, ValueError) as exc:
         c.fail("record", f"cannot be serialised canonically: {exc}")
     else:
-        cap = CAPS["trimmed_bytes"] if trimmed else CAPS["full_bytes"]
+        if trimmed:
+            cap = CAPS["trimmed_bytes"] if trimmed_cap is None else trimmed_cap
+        else:
+            cap = CAPS["full_bytes"]
         if size > cap:
             c.fail("record", f"{form} record is {size} bytes, above the cap of {cap}")
     return c.problems

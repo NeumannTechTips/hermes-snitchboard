@@ -3,7 +3,8 @@
 import copy
 import unittest
 
-from snitchboard import chain, schema
+from snitchboard import chain, config, schema
+from snitchboard.canonical import canonical_bytes
 
 from tests.helpers import build, event, sealed_chain
 
@@ -144,6 +145,112 @@ class TrimmedShape(unittest.TestCase):
                                    for i in range(300)]))
         with self.assertRaises(chain.TrimError):
             chain.trim(record)
+
+    def test_trimmed_cap_follows_the_setting(self):
+        size = len(canonical_bytes(self.record))
+        self.assertEqual(schema.validate(self.record, trimmed_cap=size), [])
+        problems = schema.validate(self.record, trimmed_cap=size - 1)
+        self.assertTrue(any(f"above the cap of {size - 1}" in p for p in problems), problems)
+
+    def test_trimming_honours_a_smaller_cap(self):
+        record = chain.seal(build([event(i, action="deny", host=f"d{i}.example.com")
+                                   for i in range(12)]))
+        roomy = chain.trim(record)
+        size = len(canonical_bytes(roomy))
+        tight = chain.trim(record, max_bytes=size - 200)
+        self.assertLessEqual(len(canonical_bytes(tight)), size - 200)
+        self.assertLess(len(tight["detections"]), len(roomy["detections"]))
+        self.assertIn("omitted at trimming", tight["note"])
+        self.assertEqual(schema.validate(tight, trimmed_cap=size - 200), [])
+
+    def test_trimming_honours_a_larger_cap(self):
+        record = chain.seal(build([event(i, action="deny", host=f"d{i}.example.com")
+                                   for i in range(40)]))
+        default = chain.trim(record)
+        larger = chain.trim(record, max_bytes=64 * 1024)
+        self.assertEqual(len(larger["detections"]), len(record["detections"]))
+        self.assertGreater(len(larger["detections"]), len(default["detections"]))
+        self.assertNotIn("omitted at trimming", larger["note"])
+        self.assertTrue(schema.validate(larger))
+        self.assertEqual(schema.validate(larger, trimmed_cap=64 * 1024), [])
+
+    def test_trim_error_names_the_cap_in_force(self):
+        record = chain.seal(build([event(i, host=f"d{i}.example.com") for i in range(80)]))
+        with self.assertRaisesRegex(chain.TrimError, "do not fit in 1024 bytes"):
+            chain.trim(record, max_bytes=1024)
+
+    def test_default_cap_matches_the_setting_default(self):
+        self.assertEqual(schema.CAPS["trimmed_bytes"],
+                         config.PLUGIN_DEFAULTS["trimmed_max_bytes"])
+        self.assertEqual(schema.CAPS["full_bytes"], config.TRIMMED_MAX_BYTES_CEILING)
+
+
+ARABIC_INDIC_TWO = "\u0662"
+ARABIC_INDIC_ZERO = "\u0660"
+
+
+class IdentifierPatterns(unittest.TestCase):
+    """Each pattern refuses a trailing newline and a digit from another script."""
+
+    RUN_ID = "run-20261102T030002Z"
+    STAMP = "2026-11-02T03:00:02+01:00"
+    SHA = "0123456789abcdef" * 4
+
+    def setUp(self):
+        self.record = full_record_with_detection()
+
+    def problems(self, phrase):
+        found = [p for p in schema.validate(self.record) if phrase in p]
+        self.assertTrue(found, schema.validate(self.record))
+
+    def test_patterns_accept_their_plain_form(self):
+        self.assertTrue(schema.RUN_ID_PATTERN.fullmatch(self.RUN_ID))
+        self.assertTrue(schema.TIMESTAMP_PATTERN.fullmatch(self.STAMP))
+        self.assertTrue(schema.SHA256_PATTERN.fullmatch(self.SHA))
+
+    def test_run_id_pattern_refuses_a_trailing_newline(self):
+        self.assertIsNone(schema.RUN_ID_PATTERN.fullmatch(self.RUN_ID + "\n"))
+        self.assertIsNone(schema.RUN_ID_PATTERN.match(self.RUN_ID + "\n"))
+        self.record["run_id"] += "\n"
+        self.problems("record.run_id: does not match the run identifier pattern")
+
+    def test_run_id_pattern_refuses_a_non_ascii_digit(self):
+        bad = self.RUN_ID.replace("2", ARABIC_INDIC_TWO, 1)
+        self.assertIsNone(schema.RUN_ID_PATTERN.fullmatch(bad))
+        self.record["run_id"] = self.record["run_id"].replace("2", ARABIC_INDIC_TWO, 1)
+        self.problems("record.run_id: does not match the run identifier pattern")
+
+    def test_timestamp_pattern_refuses_a_trailing_newline(self):
+        for stamp in (self.STAMP, "2026-11-02T02:00:02Z"):
+            with self.subTest(stamp=stamp):
+                self.assertIsNone(schema.TIMESTAMP_PATTERN.fullmatch(stamp + "\n"))
+                self.assertIsNone(schema.TIMESTAMP_PATTERN.match(stamp + "\n"))
+                with self.assertRaises(ValueError):
+                    schema.parse_timestamp(stamp + "\n")
+        self.record["window_start"] += "\n"
+        self.problems("record.window_start: not an ISO 8601 timestamp")
+
+    def test_timestamp_pattern_refuses_a_non_ascii_digit(self):
+        bad = ARABIC_INDIC_TWO + self.STAMP[1:]
+        self.assertIsNone(schema.TIMESTAMP_PATTERN.fullmatch(bad))
+        with self.assertRaises(ValueError):
+            schema.parse_timestamp(bad)
+        self.record["window_end"] = ARABIC_INDIC_TWO + self.record["window_end"][1:]
+        self.problems("record.window_end: not an ISO 8601 timestamp")
+
+    def test_sha256_pattern_refuses_a_trailing_newline(self):
+        # Before the patterns were tightened this digest passed validation.
+        self.assertIsNone(schema.SHA256_PATTERN.fullmatch(self.SHA + "\n"))
+        self.assertIsNone(schema.SHA256_PATTERN.match(self.SHA + "\n"))
+        self.record["integrity"]["content_sha256"] += "\n"
+        self.problems("record.integrity.content_sha256: expected 64 lowercase")
+
+    def test_sha256_pattern_refuses_a_non_ascii_digit(self):
+        bad = ARABIC_INDIC_ZERO + self.SHA[1:]
+        self.assertIsNone(schema.SHA256_PATTERN.fullmatch(bad))
+        block = self.record["integrity"]
+        block["prev_sha256"] = ARABIC_INDIC_ZERO + block["prev_sha256"][1:]
+        self.problems("record.integrity.prev_sha256: expected 64 lowercase")
 
 
 if __name__ == "__main__":

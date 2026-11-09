@@ -211,7 +211,9 @@ def generate():
         )
         sealed.append(chain.seal(record, sealed[-1] if sealed else None))
     keep_full = len(sealed) - FULL_RUNS
-    return [chain.trim(r) if i < keep_full else r for i, r in enumerate(sealed)]
+    cap = cfg["trimmed_max_bytes"]
+    return [chain.trim(r, max_bytes=cap) if i < keep_full else r
+            for i, r in enumerate(sealed)]
 
 
 def write(out_dir):
@@ -220,8 +222,9 @@ def write(out_dir):
     for stale in runs_dir.glob("run-*.json"):
         stale.unlink()
     records = generate()
+    cap = config.load(DEMO_SETTINGS)["trimmed_max_bytes"]
     for record in records:
-        problems = schema.validate(record)
+        problems = schema.validate(record, trimmed_cap=cap)
         if problems:
             raise SystemExit(f"{record['run_id']} is invalid: {problems}")
         path = runs_dir / f"{record['run_id']}.json"

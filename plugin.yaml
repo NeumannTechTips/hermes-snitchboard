@@ -1,0 +1,56 @@
+name: hermes-snitchboard
+version: 0.1.0
+description: >-
+  Dashboard-only: a tab showing OpenSnitch connection evidence as plain-language
+  findings mapped to MITRE ATT&CK, with a hash chain that makes edits to stored
+  history detectable. Reads run records from one directory, read-only; makes no
+  network call, runs no background process and sends no telemetry.
+author: NeumannTechTips
+requires_hermes: ">=0.23.0"
+
+provides_tools: []
+provides_hooks: []
+provides_middleware: []
+requires_env: []
+
+config_schema:
+  runs_dir:
+    type: str
+    default: ""
+    description: Directory of run records. Empty means the plugin data directory.
+  mode:
+    type: str
+    default: auto
+    description: "auto, demo or live. auto uses demonstration data when no records exist."
+  ai_process_names:
+    type: list
+    default: []
+    description: Process names treated as AI tooling.
+  agent_accounts:
+    type: list
+    default: []
+    description: Accounts the agent runs under, by name or numeric uid.
+  expected_services:
+    type: list
+    default: []
+    description: Processes or destinations whose regular contact is labelled expected.
+  provider_allowlist:
+    type: list
+    default: []
+    description: Destinations agent accounts may reach without a high-severity finding.
+  unattended_hours:
+    type: list
+    default: []
+    description: Local hours, 0 to 23, when nobody is expected to be directing the agent.
+  redact_by_default:
+    type: bool
+    default: true
+    description: Mask addresses, host names, hardware addresses and process arguments.
+  allow_reveal:
+    type: bool
+    default: true
+    description: Offer a control that reveals masked values on request.
+  retention_days:
+    type: int
+    default: 14
+    description: Days a record stays in full form before it is trimmed, never deleted.

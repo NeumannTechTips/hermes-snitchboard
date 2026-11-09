@@ -1,0 +1,2709 @@
+{
+ "agents": [
+  {
+   "connections": 24,
+   "destinations": [
+    "api.example.com",
+    "files.example.net",
+    "telemetry.example.net"
+   ],
+   "pid": 3300,
+   "ports": [
+    443
+   ],
+   "privilege_note": "agent-runner ran under an unprivileged account (uid 1500).",
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "user": "agent-svc",
+   "verdict": "agent-runner raised 3 high, 1 medium finding(s); see Findings for each one."
+  },
+  {
+   "connections": 8,
+   "destinations": [
+    "203.0.113.80",
+    "api.example.com"
+   ],
+   "pid": 3410,
+   "ports": [
+    443,
+    7000
+   ],
+   "privilege_note": "model-gateway ran under an unprivileged account (uid 1000).",
+   "process": "/usr/local/bin/model-gateway",
+   "user": "demo-user",
+   "verdict": "model-gateway raised 3 high finding(s); see Findings for each one."
+  },
+  {
+   "connections": 24,
+   "destinations": [
+    "api.example.com",
+    "files.example.net",
+    "telemetry.example.net"
+   ],
+   "pid": 3300,
+   "ports": [
+    443
+   ],
+   "privilege_note": "agent-svc ran under an unprivileged account (uid 1500).",
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "user": "agent-svc",
+   "verdict": "Account agent-svc reached 2 destination(s) outside the provider allowlist."
+  }
+ ],
+ "aggregates": {
+  "addrs": [
+   {
+    "hits": 45,
+    "what": "192.0.2.53"
+   },
+   {
+    "hits": 25,
+    "what": "203.0.113.10"
+   },
+   {
+    "hits": 20,
+    "what": "203.0.113.40"
+   },
+   {
+    "hits": 15,
+    "what": "198.51.100.77"
+   },
+   {
+    "hits": 13,
+    "what": "203.0.113.20"
+   },
+   {
+    "hits": 10,
+    "what": "198.51.100.50"
+   },
+   {
+    "hits": 6,
+    "what": "198.51.100.31"
+   },
+   {
+    "hits": 5,
+    "what": "2001:db8:20::14"
+   },
+   {
+    "hits": 4,
+    "what": "192.0.2.123"
+   },
+   {
+    "hits": 3,
+    "what": "192.0.2.90"
+   },
+   {
+    "hits": 3,
+    "what": "198.51.100.30"
+   },
+   {
+    "hits": 3,
+    "what": "203.0.113.80"
+   },
+   {
+    "hits": 2,
+    "what": "198.51.100.23"
+   },
+   {
+    "hits": 1,
+    "what": "198.51.100.66"
+   },
+   {
+    "hits": 1,
+    "what": "203.0.113.61"
+   }
+  ],
+  "daemon_uptime": 180000,
+  "dropped": 2,
+  "hosts": [
+   {
+    "hits": 25,
+    "what": "api.example.com"
+   },
+   {
+    "hits": 20,
+    "what": "sync.example.com"
+   },
+   {
+    "hits": 18,
+    "what": "cdn.example.net"
+   },
+   {
+    "hits": 15,
+    "what": "relay.example.net"
+   },
+   {
+    "hits": 10,
+    "what": "updates.example.com"
+   },
+   {
+    "hits": 6,
+    "what": "news.example.com"
+   },
+   {
+    "hits": 4,
+    "what": "time.example.net"
+   },
+   {
+    "hits": 3,
+    "what": "mirror.example.com"
+   },
+   {
+    "hits": 3,
+    "what": "telemetry.example.net"
+   },
+   {
+    "hits": 1,
+    "what": "files.example.net"
+   },
+   {
+    "hits": 1,
+    "what": "newsfeed.example.com"
+   }
+  ],
+  "node": {
+   "addr": "192.0.2.10",
+   "cons": 3007,
+   "cons_dropped": 2,
+   "daemon_rules": 4,
+   "daemon_uptime": 180000,
+   "daemon_version": "demo-1.0",
+   "hostname": "demo-host.example.com",
+   "last_connection": "2026-11-02T03:59:52+01:00",
+   "status": "running",
+   "version": "demo-1.0"
+  },
+  "ports": [
+   {
+    "hits": 89,
+    "what": "tcp/443"
+   },
+   {
+    "hits": 45,
+    "what": "udp/53"
+   },
+   {
+    "hits": 15,
+    "what": "tcp/8443"
+   },
+   {
+    "hits": 4,
+    "what": "udp/123"
+   },
+   {
+    "hits": 3,
+    "what": "tcp/7000"
+   },
+   {
+    "hits": 1,
+    "what": "tcp/80"
+   }
+  ],
+  "procs": [
+   {
+    "hits": 45,
+    "what": "/usr/libexec/name-resolver"
+   },
+   {
+    "hits": 29,
+    "what": "/usr/bin/web-browser"
+   },
+   {
+    "hits": 24,
+    "what": "/home/demo-user/.local/bin/agent-runner"
+   },
+   {
+    "hits": 20,
+    "what": "/usr/bin/note-sync"
+   },
+   {
+    "hits": 15,
+    "what": "/opt/widget/bin/widget-helper"
+   },
+   {
+    "hits": 10,
+    "what": "/usr/libexec/update-checker"
+   },
+   {
+    "hits": 8,
+    "what": "/usr/local/bin/model-gateway"
+   },
+   {
+    "hits": 4,
+    "what": "/usr/sbin/clock-sync"
+   },
+   {
+    "hits": 2,
+    "what": "unattributed process"
+   }
+  ],
+  "rules": 4,
+  "rules_detail": [
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-name-resolver",
+    "operator_data": "/usr/libexec/name-resolver",
+    "operator_operand": "process.path",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-web-browser",
+    "operator_data": "/usr/bin/web-browser",
+    "operator_operand": "process.path",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-agent-provider",
+    "operator_data": "api.example.com",
+    "operator_operand": "dest.host",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "deny",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "deny-plain-http-browser",
+    "operator_data": "80",
+    "operator_operand": "dest.port",
+    "operator_type": "simple",
+    "precedence": true
+   }
+  ],
+  "sockets": [
+   {
+    "hits": 1,
+    "what": "tcp 192.0.2.10:52344 -> 203.0.113.10:443 ESTABLISHED"
+   },
+   {
+    "hits": 1,
+    "what": "udp 192.0.2.10:41000 -> 192.0.2.53:53"
+   }
+  ],
+  "total_connections": 3007,
+  "users": [
+   {
+    "hits": 72,
+    "what": "demo-user"
+   },
+   {
+    "hits": 45,
+    "what": "resolver-svc"
+   },
+   {
+    "hits": 24,
+    "what": "agent-svc"
+   },
+   {
+    "hits": 10,
+    "what": "root"
+   },
+   {
+    "hits": 4,
+    "what": "clock-svc"
+   },
+   {
+    "hits": 2,
+    "what": "unknown account"
+   }
+  ]
+ },
+ "beacons": [
+  {
+   "assessment": "/opt/widget/bin/widget-helper contacted relay.example.net 15 times, every 240.4 s on average with 0.6% jitter. Benign reading: /opt/widget/bin/widget-helper polling relay.example.net for updates, synchronisation or a keep-alive. Malicious reading: a command-and-control heartbeat from /opt/widget/bin/widget-helper to relay.example.net.",
+   "confidence": "high",
+   "count": 15,
+   "destination": "relay.example.net",
+   "jitter_pct": 0.6,
+   "mean_interval": 240.4,
+   "process": "/opt/widget/bin/widget-helper"
+  },
+  {
+   "assessment": "Expected service: contact between /usr/bin/note-sync and sync.example.com matches the configured expected list, so it is labelled rather than flagged. Benign reading: routine polling of sync.example.com by /usr/bin/note-sync, as the list anticipates. Malicious reading: a heartbeat to sync.example.com hidden inside traffic already trusted as /usr/bin/note-sync.",
+   "confidence": "high",
+   "count": 20,
+   "destination": "sync.example.com",
+   "jitter_pct": 1.1,
+   "mean_interval": 179.6,
+   "process": "/usr/bin/note-sync"
+  },
+  {
+   "assessment": "/usr/libexec/update-checker contacted updates.example.com 10 times, every 361 s on average with 13.4% jitter. Benign reading: /usr/libexec/update-checker polling updates.example.com for updates, synchronisation or a keep-alive. Malicious reading: a command-and-control heartbeat from /usr/libexec/update-checker to updates.example.com.",
+   "confidence": "medium",
+   "count": 10,
+   "destination": "updates.example.com",
+   "jitter_pct": 13.4,
+   "mean_interval": 361.0,
+   "process": "/usr/libexec/update-checker"
+  },
+  {
+   "assessment": "/usr/bin/web-browser contacted cdn.example.net 18 times, every 204.7 s on average with 57.5% jitter. Benign reading: /usr/bin/web-browser polling cdn.example.net for updates, synchronisation or a keep-alive. Malicious reading: a command-and-control heartbeat from /usr/bin/web-browser to cdn.example.net.",
+   "confidence": "low",
+   "count": 18,
+   "destination": "cdn.example.net",
+   "jitter_pct": 57.5,
+   "mean_interval": 204.7,
+   "process": "/usr/bin/web-browser"
+  }
+ ],
+ "coverage": {
+  "from": "2026-11-01T04:00:00+01:00",
+  "slots": [
+   {
+    "covered": true,
+    "label": "04:00"
+   },
+   {
+    "covered": true,
+    "label": "05:00"
+   },
+   {
+    "covered": true,
+    "label": "06:00"
+   },
+   {
+    "covered": true,
+    "label": "07:00"
+   },
+   {
+    "covered": true,
+    "label": "08:00"
+   },
+   {
+    "covered": true,
+    "label": "09:00"
+   },
+   {
+    "covered": false,
+    "label": "10:00"
+   },
+   {
+    "covered": true,
+    "label": "11:00"
+   },
+   {
+    "covered": true,
+    "label": "12:00"
+   },
+   {
+    "covered": true,
+    "label": "13:00"
+   },
+   {
+    "covered": true,
+    "label": "14:00"
+   },
+   {
+    "covered": true,
+    "label": "15:00"
+   },
+   {
+    "covered": false,
+    "label": "16:00"
+   },
+   {
+    "covered": true,
+    "label": "17:00"
+   },
+   {
+    "covered": true,
+    "label": "18:00"
+   },
+   {
+    "covered": true,
+    "label": "19:00"
+   },
+   {
+    "covered": true,
+    "label": "20:00"
+   },
+   {
+    "covered": true,
+    "label": "21:00"
+   },
+   {
+    "covered": true,
+    "label": "22:00"
+   },
+   {
+    "covered": true,
+    "label": "23:00"
+   },
+   {
+    "covered": true,
+    "label": "00:00"
+   },
+   {
+    "covered": true,
+    "label": "01:00"
+   },
+   {
+    "covered": true,
+    "label": "02:00"
+   },
+   {
+    "covered": true,
+    "label": "03:00"
+   }
+  ],
+  "title": "Collection coverage, last 24 hours",
+  "to": "2026-11-02T04:00:00+01:00"
+ },
+ "destinations": [
+  "192.0.2.53",
+  "198.51.100.23",
+  "198.51.100.66",
+  "203.0.113.80",
+  "api.example.com",
+  "cdn.example.net",
+  "files.example.net",
+  "mirror.example.com",
+  "news.example.com",
+  "newsfeed.example.com",
+  "relay.example.net",
+  "sync.example.com",
+  "telemetry.example.net",
+  "time.example.net",
+  "updates.example.com"
+ ],
+ "detections": [
+  {
+   "attack": {
+    "tactic": "Exfiltration",
+    "tactic_id": "TA0010",
+    "technique": "Exfiltration Over Alternative Protocol",
+    "technique_id": "T1048"
+   },
+   "confidence": "high",
+   "detail": "/usr/local/bin/model-gateway made 3 connection(s) to 203.0.113.80 on tcp/7000, outside the configured standard ports. Measured bytes show the exchange with 203.0.113.80 was outbound-dominant, which supports the exfiltration reading.",
+   "evidence": [
+    "2026-11-02T03:10:00+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:16:50+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:23:40+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000"
+   ],
+   "recommendation": "Confirm that /usr/local/bin/model-gateway is meant to use port 7000; if not, block 203.0.113.80 on that port and review the tool calls made in this window.",
+   "severity": "high",
+   "title": "AI process /usr/local/bin/model-gateway used non-standard port 7000 to reach 203.0.113.80"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Dynamic Resolution",
+    "technique_id": "T1568"
+   },
+   "confidence": "medium",
+   "detail": "/usr/local/bin/model-gateway contacted 203.0.113.80 at 03:10 +0100, inside the configured unattended hours, and 203.0.113.80 appears in none of the 24 prior run(s) with collected data.",
+   "evidence": [
+    "2026-11-02T03:10:00+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:16:50+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:23:40+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000"
+   ],
+   "recommendation": "Review what /usr/local/bin/model-gateway was doing at that time and whether anyone instructed it to contact 203.0.113.80.",
+   "severity": "high",
+   "title": "AI tooling reached new destination 203.0.113.80 during unattended hours"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Dynamic Resolution",
+    "technique_id": "T1568"
+   },
+   "confidence": "medium",
+   "detail": "/home/demo-user/.local/bin/agent-runner contacted files.example.net at 03:20 +0100, inside the configured unattended hours, and files.example.net appears in none of the 24 prior run(s) with collected data.",
+   "evidence": [
+    "2026-11-02T03:20:00+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> files.example.net (203.0.113.99) tcp/443"
+   ],
+   "recommendation": "Review what /home/demo-user/.local/bin/agent-runner was doing at that time and whether anyone instructed it to contact files.example.net.",
+   "severity": "high",
+   "title": "AI tooling reached new destination files.example.net during unattended hours"
+  },
+  {
+   "attack": {
+    "tactic": "Not tied to a single tactic",
+    "tactic_id": "",
+    "technique": "Valid Accounts",
+    "technique_id": "T1078"
+   },
+   "confidence": "high",
+   "detail": "Account agent-svc made 1 connection(s) through /home/demo-user/.local/bin/agent-runner to files.example.net on tcp/443, and files.example.net is not on the provider allowlist.",
+   "evidence": [
+    "2026-11-02T03:20:00+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> files.example.net (203.0.113.99) tcp/443"
+   ],
+   "recommendation": "Add files.example.net to the allowlist only if account agent-svc genuinely needs it; otherwise restrict the account's outbound access.",
+   "severity": "high",
+   "title": "Agent account agent-svc reached files.example.net, outside the provider allowlist"
+  },
+  {
+   "attack": {
+    "tactic": "Not tied to a single tactic",
+    "tactic_id": "",
+    "technique": "Valid Accounts",
+    "technique_id": "T1078"
+   },
+   "confidence": "high",
+   "detail": "Account agent-svc made 3 connection(s) through /home/demo-user/.local/bin/agent-runner to telemetry.example.net on tcp/443, and telemetry.example.net is not on the provider allowlist.",
+   "evidence": [
+    "2026-11-02T03:31:46+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443",
+    "2026-11-02T03:35:47+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443",
+    "2026-11-02T03:36:23+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443"
+   ],
+   "recommendation": "Add telemetry.example.net to the allowlist only if account agent-svc genuinely needs it; otherwise restrict the account's outbound access.",
+   "severity": "high",
+   "title": "Agent account agent-svc reached telemetry.example.net, outside the provider allowlist"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Web Protocols",
+    "technique_id": "T1071.001"
+   },
+   "confidence": "high",
+   "detail": "2 connection(s) to 198.51.100.23 on tcp/443 could not be tied to any process, so nothing on the host accounts for them.",
+   "evidence": [
+    "2026-11-02T03:40:05+01:00 allow unattributed process pid unknown uid unknown -> 198.51.100.23 tcp/443",
+    "2026-11-02T03:49:10+01:00 allow unattributed process pid unknown uid unknown -> 198.51.100.23 tcp/443"
+   ],
+   "recommendation": "Check whether a short-lived or containerised process reached 198.51.100.23, and restore process attribution for that path if it is missing.",
+   "severity": "high",
+   "title": "Connection with no attributable process to 198.51.100.23:443"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Web Protocols",
+    "technique_id": "T1071.001"
+   },
+   "confidence": "high",
+   "detail": "The firewall denied 1 attempt(s) by /usr/bin/web-browser to reach 198.51.100.66 on tcp/80.",
+   "evidence": [
+    "2026-11-02T03:20:10+01:00 deny /usr/bin/web-browser pid 2101 uid 1000 -> 198.51.100.66 tcp/80"
+   ],
+   "recommendation": "Find out why /usr/bin/web-browser tried to reach 198.51.100.66: the denial stopped the attempt but not whatever caused it.",
+   "severity": "high",
+   "title": "Denied connection from /usr/bin/web-browser to 198.51.100.66:80"
+  },
+  {
+   "attack": {
+    "tactic": "Exfiltration",
+    "tactic_id": "TA0010",
+    "technique": "Exfiltration Over Alternative Protocol",
+    "technique_id": "T1048"
+   },
+   "confidence": "high",
+   "detail": "/usr/local/bin/model-gateway sent 4350000 bytes and received 30600 across 3 flow(s) to 203.0.113.80, an address with no resolved name. 1 flow(s) opened before the window, so the figure for those covers only the part observed.",
+   "evidence": [
+    "2026-11-02T03:10:00+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:16:50+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000",
+    "2026-11-02T03:23:40+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> 203.0.113.80 tcp/7000"
+   ],
+   "recommendation": "Identify who operates 203.0.113.80 and establish what /usr/local/bin/model-gateway uploaded; treat it as possible exfiltration until explained.",
+   "severity": "high",
+   "title": "Outbound-dominant transfer of 4.3 MB from /usr/local/bin/model-gateway to unidentified 203.0.113.80"
+  },
+  {
+   "attack": {
+    "tactic": "Exfiltration",
+    "tactic_id": "TA0010",
+    "technique": "Exfiltration Over Web Service",
+    "technique_id": "T1567"
+   },
+   "confidence": "high",
+   "detail": "/home/demo-user/.local/bin/agent-runner made 3 connection(s) to telemetry.example.net, which matches the configured telemetry list.",
+   "evidence": [
+    "2026-11-02T03:31:46+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443",
+    "2026-11-02T03:35:47+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443",
+    "2026-11-02T03:36:23+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> telemetry.example.net (192.0.2.90) tcp/443"
+   ],
+   "recommendation": "Decide whether /home/demo-user/.local/bin/agent-runner should report to telemetry.example.net, and disable that telemetry if not.",
+   "severity": "medium",
+   "title": "AI tooling /home/demo-user/.local/bin/agent-runner reached third-party telemetry at telemetry.example.net"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Dynamic Resolution",
+    "technique_id": "T1568"
+   },
+   "confidence": "medium",
+   "detail": "/usr/bin/web-browser reached newsfeed.example.com 1 time(s), and newsfeed.example.com appears in none of the 24 prior run(s) with collected data.",
+   "evidence": [
+    "2026-11-02T03:50:10+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> newsfeed.example.com (203.0.113.61) tcp/443"
+   ],
+   "recommendation": "Confirm that newsfeed.example.com is a legitimate service for /usr/bin/web-browser; if it is routine it stops reading as new once it recurs.",
+   "severity": "medium",
+   "title": "New destination newsfeed.example.com for /usr/bin/web-browser"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "high",
+   "detail": "/opt/widget/bin/widget-helper reached relay.example.net on port 8443 15 times, a mean of 240.4 s apart. The rhythm fits either routine polling by /opt/widget/bin/widget-helper or a control-server heartbeat to relay.example.net.",
+   "evidence": [
+    "2026-11-02T03:01:30+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T03:05:31+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T03:09:33+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T03:13:35+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T03:17:34+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443"
+   ],
+   "recommendation": "Compare the 240.4-second rhythm from /opt/widget/bin/widget-helper with its documented polling; if nothing explains it, isolate the process and investigate relay.example.net.",
+   "severity": "medium",
+   "title": "Regular-interval contact from /opt/widget/bin/widget-helper to relay.example.net"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "low",
+   "detail": "/usr/bin/web-browser reached cdn.example.net on port 443 18 times, a mean of 204.7 s apart. The rhythm fits either routine polling by /usr/bin/web-browser or a control-server heartbeat to cdn.example.net.",
+   "evidence": [
+    "2026-11-02T03:01:21+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> cdn.example.net (2001:db8:20::14) tcp/443",
+    "2026-11-02T03:04:44+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> cdn.example.net (203.0.113.20) tcp/443",
+    "2026-11-02T03:07:53+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> cdn.example.net (203.0.113.20) tcp/443",
+    "2026-11-02T03:11:15+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> cdn.example.net (2001:db8:20::14) tcp/443",
+    "2026-11-02T03:13:12+01:00 allow /usr/bin/web-browser pid 2101 uid 1000 -> cdn.example.net (203.0.113.20) tcp/443"
+   ],
+   "recommendation": "Compare the 204.7-second rhythm from /usr/bin/web-browser with its documented polling; if nothing explains it, isolate the process and investigate cdn.example.net.",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/bin/web-browser to cdn.example.net"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "medium",
+   "detail": "/usr/libexec/update-checker reached updates.example.com on port 443 10 times, a mean of 361 s apart. The rhythm fits either routine polling by /usr/libexec/update-checker or a control-server heartbeat to updates.example.com.",
+   "evidence": [
+    "2026-11-02T03:00:50+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T03:07:56+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T03:12:54+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T03:19:10+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T03:25:35+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443"
+   ],
+   "recommendation": "Compare the 361-second rhythm from /usr/libexec/update-checker with its documented polling; if nothing explains it, isolate the process and investigate updates.example.com.",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/libexec/update-checker to updates.example.com"
+  }
+ ],
+ "integrity": {
+  "content_sha256": "d800a1966fc730ac2d14eb21af5e74e72b77216b6d47f83a13b2466ef034a662",
+  "prev_sha256": "e934beb6cb6fb827f1f8b96fa7eb55f65fb4914d6730ec84da74e7dea3757a40",
+  "run_index": 25
+ },
+ "note": "",
+ "novel": [
+  {
+   "baseline_note": "203.0.113.80 appeared in 0 of 24 prior run(s) with collected data.",
+   "contacts": 3,
+   "destination": "203.0.113.80",
+   "prior_runs_seen": 0,
+   "processes": [
+    "/usr/local/bin/model-gateway"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "198.51.100.23 appeared in 0 of 24 prior run(s) with collected data.",
+   "contacts": 2,
+   "destination": "198.51.100.23",
+   "prior_runs_seen": 0,
+   "processes": [
+    "unattributed process"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "files.example.net appeared in 0 of 24 prior run(s) with collected data.",
+   "contacts": 1,
+   "destination": "files.example.net",
+   "prior_runs_seen": 0,
+   "processes": [
+    "/home/demo-user/.local/bin/agent-runner"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "newsfeed.example.com appeared in 0 of 24 prior run(s) with collected data.",
+   "contacts": 1,
+   "destination": "newsfeed.example.com",
+   "prior_runs_seen": 0,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "relay.example.net appeared in 1 of 24 prior run(s) with collected data.",
+   "contacts": 15,
+   "destination": "relay.example.net",
+   "prior_runs_seen": 1,
+   "processes": [
+    "/opt/widget/bin/widget-helper"
+   ],
+   "rarity": 96
+  },
+  {
+   "baseline_note": "198.51.100.66 appeared in 1 of 24 prior run(s) with collected data.",
+   "contacts": 1,
+   "destination": "198.51.100.66",
+   "prior_runs_seen": 1,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 96
+  },
+  {
+   "baseline_note": "telemetry.example.net appeared in 7 of 24 prior run(s) with collected data.",
+   "contacts": 3,
+   "destination": "telemetry.example.net",
+   "prior_runs_seen": 7,
+   "processes": [
+    "/home/demo-user/.local/bin/agent-runner"
+   ],
+   "rarity": 71
+  },
+  {
+   "baseline_note": "192.0.2.53 appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 45,
+   "destination": "192.0.2.53",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/libexec/name-resolver"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "api.example.com appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 25,
+   "destination": "api.example.com",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/home/demo-user/.local/bin/agent-runner",
+    "/usr/local/bin/model-gateway"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "sync.example.com appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 20,
+   "destination": "sync.example.com",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/bin/note-sync"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "cdn.example.net appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 18,
+   "destination": "cdn.example.net",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "updates.example.com appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 10,
+   "destination": "updates.example.com",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/libexec/update-checker"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "news.example.com appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 6,
+   "destination": "news.example.com",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "time.example.net appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 4,
+   "destination": "time.example.net",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/sbin/clock-sync"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "mirror.example.com appeared in 24 of 24 prior run(s) with collected data.",
+   "contacts": 3,
+   "destination": "mirror.example.com",
+   "prior_runs_seen": 24,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  }
+ ],
+ "rows": [
+  {
+   "action": "allow",
+   "activity": "no attributable process",
+   "dport": 443,
+   "dst": "198.51.100.23",
+   "is_ai": false,
+   "pid": null,
+   "process": null,
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:49:10+01:00",
+   "uid": null
+  },
+  {
+   "action": "allow",
+   "activity": "no attributable process",
+   "dport": 443,
+   "dst": "198.51.100.23",
+   "is_ai": false,
+   "pid": null,
+   "process": null,
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:40:05+01:00",
+   "uid": null
+  },
+  {
+   "action": "allow",
+   "activity": "agent account outside its allowlist",
+   "dport": 443,
+   "dst": "telemetry.example.net",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:36:23+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "agent account outside its allowlist",
+   "dport": 443,
+   "dst": "telemetry.example.net",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:47+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "agent account outside its allowlist",
+   "dport": 443,
+   "dst": "telemetry.example.net",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:31:46+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling on a non-standard port",
+   "dport": 7000,
+   "dst": "203.0.113.80",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:23:40+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "deny",
+   "activity": "denied by the firewall",
+   "dport": 80,
+   "dst": "198.51.100.66",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:20:10+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, new destination, unattended hours",
+   "dport": 443,
+   "dst": "files.example.net",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:20:00+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling on a non-standard port",
+   "dport": 7000,
+   "dst": "203.0.113.80",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:16:50+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling on a non-standard port",
+   "dport": 7000,
+   "dst": "203.0.113.80",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:10:00+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:57:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:53:35+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 443,
+   "dst": "newsfeed.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:50:10+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:49:34+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:45:35+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:41:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:37:34+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:33:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:29:32+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:25:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:21:32+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:17:34+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:13:35+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:09:33+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:05:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact, high confidence",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:01:30+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:59:52+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:59:21+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:59:18+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:59:08+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:58:56+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:58:16+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:57:22+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:56:48+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:56:47+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:56:38+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:55:52+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:55:50+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:55:49+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:55:42+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:54:59+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:54:22+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:54:16+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:52:34+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:51:54+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:51:24+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:51:09+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:49:21+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:48:48+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:48:24+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:48:09+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:47:28+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:46:20+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:46:03+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:45:56+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:45:47+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:45:23+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:44:57+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:42:20+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:42:20+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:42:08+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:42:07+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:41:53+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:41:28+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:41:22+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:40:50+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:39:20+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:38:40+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:37:38+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:36:56+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:36:21+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:36:19+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:36:02+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:57+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:54+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:48+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:30+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:29+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:16+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:15+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:35:03+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:34:57+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:34:53+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:34:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:34:24+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:33:29+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:33:25+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:32:31+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:32:15+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:32:02+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:30:53+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:30:27+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:29:24+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:28:45+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:28:42+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:28:13+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:28:02+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:27:29+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:25:35+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:25:11+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:25:03+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:24:27+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:24:26+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:23:09+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:21:57+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:21:32+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:21:29+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:20:12+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:19:51+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:19:40+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:19:34+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:19:26+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:19:10+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:18:58+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:18:45+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:18:26+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:18:19+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:17:00+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:16:22+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T03:16:20+01:00",
+   "uid": 990
+  }
+ ],
+ "run_id": "run-20261102T030002Z",
+ "schema_version": 1,
+ "started_at": "2026-11-02T04:00:02+01:00",
+ "status": "ok",
+ "totals": {
+  "agents_active": 3,
+  "ai_connections": 32,
+  "allowed": 156,
+  "beacon_candidates": 3,
+  "connections": 157,
+  "denied": 1,
+  "novel_destinations": 4,
+  "unattributed": 2,
+  "unique_destinations": 15,
+  "unique_processes": 8
+ },
+ "trimmed": false,
+ "volume": {
+  "available": true,
+  "note": "Measured byte counts cover 157 of 157 connection(s); unmeasured connections are left out rather than estimated.",
+  "rows": [
+   {
+    "assessment": "Inbound-dominant: /usr/libexec/name-resolver mostly downloaded from 192.0.2.53, which fits fetching content.",
+    "destination": "192.0.2.53",
+    "flows": 45,
+    "process": "/usr/libexec/name-resolver",
+    "recv_bytes": 9448007,
+    "sent_bytes": 203108
+   },
+   {
+    "assessment": "Inbound-dominant: /home/demo-user/.local/bin/agent-runner mostly downloaded from api.example.com, which fits fetching content.",
+    "destination": "api.example.com",
+    "flows": 20,
+    "process": "/home/demo-user/.local/bin/agent-runner",
+    "recv_bytes": 5037800,
+    "sent_bytes": 84115
+   },
+   {
+    "assessment": "Outbound-dominant: /usr/local/bin/model-gateway sent 142.2 times what it received from 203.0.113.80. 1 flow(s) to 203.0.113.80 opened before the window and could not be paired, so their counts cover only the part observed.",
+    "destination": "203.0.113.80",
+    "flows": 3,
+    "process": "/usr/local/bin/model-gateway",
+    "recv_bytes": 30600,
+    "sent_bytes": 4350000
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/web-browser mostly downloaded from cdn.example.net, which fits fetching content.",
+    "destination": "cdn.example.net",
+    "flows": 18,
+    "process": "/usr/bin/web-browser",
+    "recv_bytes": 4287938,
+    "sent_bytes": 91615
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/note-sync mostly downloaded from sync.example.com, which fits fetching content.",
+    "destination": "sync.example.com",
+    "flows": 20,
+    "process": "/usr/bin/note-sync",
+    "recv_bytes": 4152451,
+    "sent_bytes": 84898
+   },
+   {
+    "assessment": "Inbound-dominant: /opt/widget/bin/widget-helper mostly downloaded from relay.example.net, which fits fetching content.",
+    "destination": "relay.example.net",
+    "flows": 15,
+    "process": "/opt/widget/bin/widget-helper",
+    "recv_bytes": 3382523,
+    "sent_bytes": 67900
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/libexec/update-checker mostly downloaded from updates.example.com, which fits fetching content.",
+    "destination": "updates.example.com",
+    "flows": 10,
+    "process": "/usr/libexec/update-checker",
+    "recv_bytes": 2693092,
+    "sent_bytes": 46793
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/web-browser mostly downloaded from news.example.com, which fits fetching content.",
+    "destination": "news.example.com",
+    "flows": 6,
+    "process": "/usr/bin/web-browser",
+    "recv_bytes": 1520169,
+    "sent_bytes": 34836
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/sbin/clock-sync mostly downloaded from time.example.net, which fits fetching content.",
+    "destination": "time.example.net",
+    "flows": 4,
+    "process": "/usr/sbin/clock-sync",
+    "recv_bytes": 1106813,
+    "sent_bytes": 25829
+   },
+   {
+    "assessment": "Inbound-dominant: /home/demo-user/.local/bin/agent-runner mostly downloaded from telemetry.example.net, which fits fetching content.",
+    "destination": "telemetry.example.net",
+    "flows": 3,
+    "process": "/home/demo-user/.local/bin/agent-runner",
+    "recv_bytes": 1009379,
+    "sent_bytes": 12012
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/local/bin/model-gateway mostly downloaded from api.example.com, which fits fetching content.",
+    "destination": "api.example.com",
+    "flows": 5,
+    "process": "/usr/local/bin/model-gateway",
+    "recv_bytes": 718320,
+    "sent_bytes": 33238
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/web-browser mostly downloaded from mirror.example.com, which fits fetching content.",
+    "destination": "mirror.example.com",
+    "flows": 3,
+    "process": "/usr/bin/web-browser",
+    "recv_bytes": 589545,
+    "sent_bytes": 11123
+   },
+   {
+    "assessment": "Inbound-dominant: unattributed process mostly downloaded from 198.51.100.23, which fits fetching content.",
+    "destination": "198.51.100.23",
+    "flows": 2,
+    "process": "unattributed process",
+    "recv_bytes": 259590,
+    "sent_bytes": 13100
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/web-browser mostly downloaded from newsfeed.example.com, which fits fetching content.",
+    "destination": "newsfeed.example.com",
+    "flows": 1,
+    "process": "/usr/bin/web-browser",
+    "recv_bytes": 235472,
+    "sent_bytes": 5567
+   },
+   {
+    "assessment": "Inbound-dominant: /usr/bin/web-browser mostly downloaded from 198.51.100.66, which fits fetching content.",
+    "destination": "198.51.100.66",
+    "flows": 1,
+    "process": "/usr/bin/web-browser",
+    "recv_bytes": 187287,
+    "sent_bytes": 7345
+   },
+   {
+    "assessment": "Outbound-dominant: /home/demo-user/.local/bin/agent-runner sent 15.5 times what it received from files.example.net.",
+    "destination": "files.example.net",
+    "flows": 1,
+    "process": "/home/demo-user/.local/bin/agent-runner",
+    "recv_bytes": 3100,
+    "sent_bytes": 48000
+   }
+  ]
+ },
+ "window_end": "2026-11-02T04:00:00+01:00",
+ "window_start": "2026-11-02T03:00:00+01:00"
+}

@@ -1,0 +1,191 @@
+{
+ "coverage": {
+  "from": "2026-10-31T03:00:00+01:00",
+  "slots": [
+   {
+    "covered": false,
+    "label": "03:00"
+   },
+   {
+    "covered": false,
+    "label": "04:00"
+   },
+   {
+    "covered": false,
+    "label": "05:00"
+   },
+   {
+    "covered": false,
+    "label": "06:00"
+   },
+   {
+    "covered": false,
+    "label": "07:00"
+   },
+   {
+    "covered": false,
+    "label": "08:00"
+   },
+   {
+    "covered": false,
+    "label": "09:00"
+   },
+   {
+    "covered": false,
+    "label": "10:00"
+   },
+   {
+    "covered": false,
+    "label": "11:00"
+   },
+   {
+    "covered": false,
+    "label": "12:00"
+   },
+   {
+    "covered": false,
+    "label": "13:00"
+   },
+   {
+    "covered": false,
+    "label": "14:00"
+   },
+   {
+    "covered": false,
+    "label": "15:00"
+   },
+   {
+    "covered": false,
+    "label": "16:00"
+   },
+   {
+    "covered": false,
+    "label": "17:00"
+   },
+   {
+    "covered": false,
+    "label": "18:00"
+   },
+   {
+    "covered": false,
+    "label": "19:00"
+   },
+   {
+    "covered": false,
+    "label": "20:00"
+   },
+   {
+    "covered": false,
+    "label": "21:00"
+   },
+   {
+    "covered": false,
+    "label": "22:00"
+   },
+   {
+    "covered": false,
+    "label": "23:00"
+   },
+   {
+    "covered": false,
+    "label": "00:00"
+   },
+   {
+    "covered": true,
+    "label": "01:00"
+   },
+   {
+    "covered": true,
+    "label": "02:00"
+   }
+  ],
+  "title": "Collection coverage, last 24 hours",
+  "to": "2026-11-01T03:00:00+01:00"
+ },
+ "destinations": [
+  "192.0.2.53",
+  "api.example.com",
+  "cdn.example.net",
+  "mirror.example.com",
+  "news.example.com",
+  "sync.example.com",
+  "time.example.net",
+  "updates.example.com"
+ ],
+ "detections": [
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "low",
+   "detail": "/home/demo-user/.local/bin/agent-runner reached api.example.com on port 443 18 times, a mean of 198.9 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T02:00:38+01:00 allow /home/demo-user/.local/bin/agent-runner pid 3300 uid 1500 -> api.example.com (203.0.113.10) tcp/443"
+   ],
+   "recommendation": "Compare the 198.9-second rhythm from /home/demo-user/.local/bin/agent-runner with its documented polling; if nothing explains it, isolate the process and...",
+   "severity": "low",
+   "title": "Regular-interval contact from /home/demo-user/.local/bin/agent-runner to api.example.com"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "medium",
+   "detail": "/usr/libexec/update-checker reached updates.example.com on port 443 10 times, a mean of 357 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T02:00:50+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443"
+   ],
+   "recommendation": "Compare the 357-second rhythm from /usr/libexec/update-checker with its documented polling; if nothing explains it, isolate the process and investigate...",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/libexec/update-checker to updates.example.com"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "low",
+   "detail": "/usr/local/bin/model-gateway reached api.example.com on port 443 8 times, a mean of 366.1 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T02:11:14+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> api.example.com (203.0.113.10) tcp/443"
+   ],
+   "recommendation": "Compare the 366.1-second rhythm from /usr/local/bin/model-gateway with its documented polling; if nothing explains it, isolate the process and investigate...",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/local/bin/model-gateway to api.example.com"
+  }
+ ],
+ "integrity": {
+  "content_sha256": "fae2943e02ab147e23247bf346ea953df1e5bf1ecec8fd20131805e95ad8f10d",
+  "prev_sha256": "88650c85a6fc533e6fb88c02bb339ee5854a6ac37c8683f7b7f878f929eb5c8f",
+  "run_index": 1,
+  "sealed_sha256": "7b6adaf6674f335a16538d252e35727126b349fc16c73a940ba5a7dc1d4b9af5"
+ },
+ "note": "",
+ "run_id": "run-20261101T020002Z",
+ "schema_version": 1,
+ "started_at": "2026-11-01T03:00:02+01:00",
+ "status": "ok",
+ "totals": {
+  "agents_active": 3,
+  "ai_connections": 26,
+  "allowed": 120,
+  "beacon_candidates": 3,
+  "connections": 120,
+  "denied": 0,
+  "novel_destinations": 0,
+  "unattributed": 0,
+  "unique_destinations": 8,
+  "unique_processes": 7
+ },
+ "trimmed": true,
+ "window_end": "2026-11-01T03:00:00+01:00",
+ "window_start": "2026-11-01T02:00:00+01:00"
+}

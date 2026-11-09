@@ -1,0 +1,27 @@
+{
+ "agent_accounts": [
+  "agent-svc"
+ ],
+ "ai_process_names": [
+  "agent-runner",
+  "model-gateway"
+ ],
+ "expected_services": [
+  "note-sync"
+ ],
+ "mode": "demo",
+ "provider_allowlist": [
+  "api.example.com"
+ ],
+ "telemetry_destinations": [
+  "telemetry.example.net"
+ ],
+ "unattended_hours": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5
+ ]
+}

@@ -3,7 +3,7 @@
 | Field | Detail |
 |---|---|
 | Document ID | HSB-PRD-001 |
-| Version | 1.0, approved |
+| Version | 1.1, approved |
 | Date | 9 November 2026 |
 | Owner | NeumannTechTips |
 | Repository | `NeumannTechTips/hermes-snitchboard` (private until the gate in section 11.3 passes) |
@@ -30,7 +30,7 @@ Snitchboard closes that gap. It presents OpenSnitch connection evidence as a tab
 | SC3 | No third-party runtime dependency | `plugin.yaml` declares none, and the engine imports only the standard library |
 | SC4 | No personal or traceable data in the repository, its history, its screenshots or the video | History-wide scan, fixture range test and manual review all pass before publication |
 | SC5 | The engine reproduces the rules in section 7.4 exactly | Unit tests with fixed fixtures for every rule, including boundary values |
-| SC6 | Alteration of any stored record is detected | A test edits one record and one chain link, then confirms verification fails and names the first broken run |
+| SC6 | Alteration of any full record, or of the order of the chain, is detected | A test edits one record and one chain link, then confirms verification fails and names the first broken run. A trimmed record's summary is not chain-covered, is labelled as such in the interface, and is excluded from this criterion by design (see 7.3) |
 | SC7 | Every run record validates against the schema in section 7.3 | A schema validator runs over all fixtures and over collector output |
 | SC8 | The submission is complete with a clear margin | Pull request opened, video posted and form submitted at least four hours before the cut-off |
 
@@ -168,7 +168,9 @@ Every record carries `schema_version`, `run_id`, `started_at`, `window_start`, `
 
 `status` takes one of `ok`, `partial` or `no_data`. The reference implementation used `collection_unavailable`, which maps to `no_data`.
 
-A record where `trimmed` is false additionally carries `detections`, `beacons`, `novel`, `agents`, `volume`, `rows` and `aggregates`. A record where `trimmed` is true carries `detections` in summary form plus `destinations`, a sorted list of the destinations observed, retained so that novelty stays computable. This is the requirement identified in section 5.2.
+A record where `trimmed` is false additionally carries `detections`, `beacons`, `novel`, `agents`, `volume`, `rows` and `aggregates`. Every record, full or trimmed, carries `destinations`, a sorted list of the destinations observed. Novelty is computed against prior runs of either form, and a full record's `rows` and `hosts` are capped, so a full record that omitted this list would give a wrong rarity score. This extends the requirement identified in section 5.2.
+
+A record where `trimmed` is true carries `detections` in shortened form. Every mandatory detection field is still present; only the prose is cut. Where a trimmed record would still exceed its cap, the lowest-severity detections are dropped and the record's `note` records that they were.
 
 | Field | Shape |
 |---|---|
@@ -185,9 +187,11 @@ A record where `trimmed` is false additionally carries `detections`, `beacons`, 
 | `aggregates.rules_detail[]` | `{name, enabled, precedence, action, duration, operator_type, operator_operand, operator_data, created}` |
 | `integrity` | `{content_sha256, prev_sha256, run_index}` |
 
-Caps: 120 rows, 45 volume rows, 20 hosts, 15 addresses, 15 novel destinations, 16 beacons. Severity is one of `high`, `medium` or `low`. Confidence is one of `high`, `medium` or `low`. Default retention is fourteen days, after which a full record is trimmed rather than deleted, so the chain survives.
+Caps: 120 rows, 45 volume rows, 20 hosts, 15 addresses, 15 novel destinations, 16 beacons. The trimmed-record cap is the setting `trimmed_max_bytes`, default 8 KiB. A busy host can produce a destination list that will not fit, and trimming then fails loudly rather than discarding destinations silently, because a quietly shortened list would corrupt novelty with no signal that it had happened. Severity is one of `high`, `medium` or `low`. Confidence is one of `high`, `medium` or `low`. Default retention is fourteen days, after which a full record is trimmed rather than deleted, so the chain survives.
 
-Integrity is the SHA-256 of the canonical JSON of the record with the `integrity` block removed, keys sorted, no whitespace. Trimming changes the content and therefore breaks the hash, so a trimmed record carries the original `content_sha256` unchanged in a `sealed_sha256` field and sets `trimmed` to true. Verification treats a trimmed record as a link whose content cannot be re-derived, states this plainly, and continues the chain. This limitation is disclosed in the interface rather than hidden.
+Integrity is the SHA-256 of the canonical JSON of the record with the `integrity` block removed, keys sorted, no whitespace. Trimming changes the content and therefore breaks the hash, so a trimmed record carries the original `content_sha256` unchanged in a `sealed_sha256` field and sets `trimmed` to true. Verification treats a trimmed record as a link whose content cannot be re-derived, states this plainly, and continues the chain.
+
+What the chain does and does not cover is set out here, because the distinction decides what may honestly be claimed. The chain attests to the sequence of full records and to the digest each one held, and that fact survives trimming, because the successor's `prev_sha256` still matches the preserved `sealed_sha256`. A trimmed record's own summary content is not covered: an adversary who edited it and recomputed its digest would not be caught. Trimmed summaries are therefore derived analysis aids rather than evidence, they are classified as partial records in the interface, and editing one degrades novelty scoring without forging anything. Binding each trimmed form into its successor's canonical content would close the gap, and that is recorded as a candidate for a later version.
 
 ### 7.4 Analysis rules
 
@@ -197,7 +201,7 @@ Thresholds are configurable; the defaults follow.
 |---|---|
 | Coverage | One slot per hour across the last 24 hours. An hour with no run, or whose run status is not `ok`, is not covered |
 | Novelty | For each destination, count the prior runs, up to 48, that contained it. Rarity is 100 when never seen, scaling to 0 when present in every prior run. Report the top 15 |
-| Beaconing | For each process and destination pair with at least eight contacts, excluding port 53, compute the mean interval and the jitter as a coefficient of variation in per cent. Report pairs whose mean falls between 20 seconds and 2 hours with jitter below 60 per cent, ordered by jitter. Confidence is high below 10 per cent, medium below 25 per cent, otherwise low. Every assessment states both the benign and the malicious reading. Services named in the expected list are labelled as expected rather than flagged |
+| Beaconing | For each process and destination pair with at least eight contacts, excluding port 53, compute the mean interval and the jitter as a coefficient of variation in per cent. Report pairs whose mean falls between 20 seconds and 2 hours with jitter below 60 per cent, ordered by jitter. Confidence is high below 10 per cent, medium below 25 per cent, otherwise low. Every assessment states both the benign and the malicious reading. Services named in the expected list are labelled as expected rather than flagged. Eight contacts inside a one-hour window cap the observable mean interval at roughly 8.5 minutes, so the two-hour ceiling becomes reachable only once the collector supplies a longer lookback |
 | Volume | Used only where the record carries measured per-flow byte counts joined to the owning process. Ranked by total bytes, capped at 45 rows, with an assessment derived from the sent and received ratio. A flow that opened before the window and could not be paired is labelled as such |
 | Agents | One row for each configured AI process and each configured non-standard account, giving connections, ports, destinations, a privilege note and a verdict |
 | Integrity | As specified in section 7.3 |
@@ -215,7 +219,7 @@ Thresholds are configurable; the defaults follow.
 | Sustained transfer to a service endpoint | T1567 Exfiltration Over Web Service | TA0010 |
 | An account used beyond its need | T1078 Valid Accounts | Not tied to a single tactic |
 
-T1571 was verified against the ATT&CK site and is included on the owner's decision. A bundled list of permitted identifiers is checked by a test, so the engine cannot emit an identifier that is not on it. The remaining names are confirmed during the release checklist.
+Two severity rules in 7.6 have no row of their own. An unattributed connection and a denied connection take the technique implied by their destination port, and T1078 carries a descriptive tactic with an empty `tactic_id`, because that technique spans several tactics. T1571 was verified against the ATT&CK site and is included on the owner's decision. A bundled list of permitted identifiers is checked by a test, so the engine cannot emit an identifier that is not on it. The remaining names are confirmed during the release checklist.
 
 ### 7.6 Severity
 
@@ -243,7 +247,7 @@ All routes sit beneath `/api/plugins/hermes-snitchboard/`, behind the dashboard 
 
 ### 7.8 Settings
 
-Declared through `config_schema`: `runs_dir`, `mode` (`auto`, `demo`, `live`), `ai_process_names`, `agent_accounts`, `expected_services`, `provider_allowlist`, `unattended_hours`, `redact_by_default` (default true), `allow_reveal`, `retention_days` (default 14). Defaults are neutral and name no particular machine.
+Declared through `config_schema`: `runs_dir`, `mode` (`auto`, `demo`, `live`), `ai_process_names`, `agent_accounts`, `expected_services`, `provider_allowlist`, `unattended_hours`, `redact_by_default` (default true), `allow_reveal`, `retention_days` (default 14), `telemetry_destinations` (the list feeding the medium-severity rule in 7.6) and `trimmed_max_bytes` (default 8192). Defaults are neutral and name no particular machine.
 
 ### 7.9 Interface inventory and priority tiers
 
@@ -414,6 +418,10 @@ Every item must pass before the repository is made public.
 | D4 | Full-fidelity port approved, built in the three tiers set out in 7.9 | 9 November 2026 |
 | D5 | Interface built from React elements rather than markup strings, with a bounded data layer and dashboard theme variables | 9 November 2026 |
 | D6 | The project avatar is used, with the non-endorsement statement in the README | 9 November 2026 |
+| D7 | `destinations` is carried by both record forms, not by trimmed records alone | 9 November 2026 |
+| D8 | The integrity claim is scoped to full records and to chain order. Trimmed summaries are derived aids rather than evidence, and the interface states this | 9 November 2026 |
+| D9 | Trimming fails loudly when the destination list will not fit the cap. Storing destination digests instead is deferred to a later version | 9 November 2026 |
+| D10 | A known process means one that can be identified, since trimmed history keeps no process names. A run with status `no_data` is excluded from the novelty denominator | 9 November 2026 |
 
 ## 15. Sources
 
@@ -434,4 +442,5 @@ Every item must pass before the repository is made public.
 | Date | Version | Change |
 |---|---|---|
 | 9 November 2026 | 0.1 | Draft created for sign-off |
+| 9 November 2026 | 1.1 | Resolutions from the first build session recorded: SC6 scoped to full records and chain order, `destinations` carried by both forms, trimmed detections shortened rather than reduced, `telemetry_destinations` and `trimmed_max_bytes` added to 7.8, the beacon ceiling limitation noted, and decisions D7 to D10 added |
 | 9 November 2026 | 1.0 | Approved. Scope widened to a full-fidelity port with seventeen interface elements in three tiers. Section 5 added, recording schema inconsistency and the trimming effect on novelty. Schema in 7.3 made strict, with a declared trimmed form. Front-end conventions added at 7.10. Routes extended with pagination and a series endpoint. Decisions D1 to D6 recorded. The earlier assumptions about cross-account access are closed by D3 |

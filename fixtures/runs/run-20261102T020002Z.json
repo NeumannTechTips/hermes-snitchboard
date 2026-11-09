@@ -1,0 +1,2331 @@
+{
+ "agents": [
+  {
+   "connections": 18,
+   "destinations": [
+    "api.example.com"
+   ],
+   "pid": 3300,
+   "ports": [
+    443
+   ],
+   "privilege_note": "agent-runner ran under an unprivileged account (uid 1500).",
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "user": "agent-svc",
+   "verdict": "agent-runner made 18 connection(s) and raised no findings."
+  },
+  {
+   "connections": 4,
+   "destinations": [
+    "api.example.com"
+   ],
+   "pid": 3410,
+   "ports": [
+    443
+   ],
+   "privilege_note": "model-gateway ran under an unprivileged account (uid 1000).",
+   "process": "/usr/local/bin/model-gateway",
+   "user": "demo-user",
+   "verdict": "model-gateway made 4 connection(s) and raised no findings."
+  },
+  {
+   "connections": 18,
+   "destinations": [
+    "api.example.com"
+   ],
+   "pid": 3300,
+   "ports": [
+    443
+   ],
+   "privilege_note": "agent-svc ran under an unprivileged account (uid 1500).",
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "user": "agent-svc",
+   "verdict": "Account agent-svc kept to the provider allowlist."
+  }
+ ],
+ "aggregates": {
+  "addrs": [
+   {
+    "hits": 44,
+    "what": "192.0.2.53"
+   },
+   {
+    "hits": 22,
+    "what": "203.0.113.10"
+   },
+   {
+    "hits": 20,
+    "what": "203.0.113.40"
+   },
+   {
+    "hits": 15,
+    "what": "198.51.100.77"
+   },
+   {
+    "hits": 10,
+    "what": "198.51.100.50"
+   },
+   {
+    "hits": 10,
+    "what": "203.0.113.20"
+   },
+   {
+    "hits": 5,
+    "what": "2001:db8:20::14"
+   },
+   {
+    "hits": 4,
+    "what": "192.0.2.123"
+   },
+   {
+    "hits": 4,
+    "what": "198.51.100.30"
+   },
+   {
+    "hits": 3,
+    "what": "198.51.100.31"
+   },
+   {
+    "hits": 1,
+    "what": "198.51.100.66"
+   }
+  ],
+  "daemon_uptime": 176400,
+  "dropped": 1,
+  "hosts": [
+   {
+    "hits": 22,
+    "what": "api.example.com"
+   },
+   {
+    "hits": 20,
+    "what": "sync.example.com"
+   },
+   {
+    "hits": 15,
+    "what": "cdn.example.net"
+   },
+   {
+    "hits": 15,
+    "what": "relay.example.net"
+   },
+   {
+    "hits": 10,
+    "what": "updates.example.com"
+   },
+   {
+    "hits": 4,
+    "what": "mirror.example.com"
+   },
+   {
+    "hits": 4,
+    "what": "time.example.net"
+   },
+   {
+    "hits": 3,
+    "what": "news.example.com"
+   }
+  ],
+  "node": {
+   "addr": "192.0.2.10",
+   "cons": 2850,
+   "cons_dropped": 1,
+   "daemon_rules": 4,
+   "daemon_uptime": 176400,
+   "daemon_version": "demo-1.0",
+   "hostname": "demo-host.example.com",
+   "last_connection": "2026-11-02T02:59:35+01:00",
+   "status": "running",
+   "version": "demo-1.0"
+  },
+  "ports": [
+   {
+    "hits": 74,
+    "what": "tcp/443"
+   },
+   {
+    "hits": 44,
+    "what": "udp/53"
+   },
+   {
+    "hits": 15,
+    "what": "tcp/8443"
+   },
+   {
+    "hits": 4,
+    "what": "udp/123"
+   },
+   {
+    "hits": 1,
+    "what": "tcp/80"
+   }
+  ],
+  "procs": [
+   {
+    "hits": 44,
+    "what": "/usr/libexec/name-resolver"
+   },
+   {
+    "hits": 23,
+    "what": "/usr/bin/web-browser"
+   },
+   {
+    "hits": 20,
+    "what": "/usr/bin/note-sync"
+   },
+   {
+    "hits": 18,
+    "what": "/home/demo-user/.local/bin/agent-runner"
+   },
+   {
+    "hits": 15,
+    "what": "/opt/widget/bin/widget-helper"
+   },
+   {
+    "hits": 10,
+    "what": "/usr/libexec/update-checker"
+   },
+   {
+    "hits": 4,
+    "what": "/usr/local/bin/model-gateway"
+   },
+   {
+    "hits": 4,
+    "what": "/usr/sbin/clock-sync"
+   }
+  ],
+  "rules": 4,
+  "rules_detail": [
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-name-resolver",
+    "operator_data": "/usr/libexec/name-resolver",
+    "operator_operand": "process.path",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-web-browser",
+    "operator_data": "/usr/bin/web-browser",
+    "operator_operand": "process.path",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "allow",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "allow-agent-provider",
+    "operator_data": "api.example.com",
+    "operator_operand": "dest.host",
+    "operator_type": "simple",
+    "precedence": false
+   },
+   {
+    "action": "deny",
+    "created": "2026-11-01T01:00:00+01:00",
+    "duration": "always",
+    "enabled": true,
+    "name": "deny-plain-http-browser",
+    "operator_data": "80",
+    "operator_operand": "dest.port",
+    "operator_type": "simple",
+    "precedence": true
+   }
+  ],
+  "sockets": [
+   {
+    "hits": 1,
+    "what": "tcp 192.0.2.10:52344 -> 203.0.113.10:443 ESTABLISHED"
+   },
+   {
+    "hits": 1,
+    "what": "udp 192.0.2.10:41000 -> 192.0.2.53:53"
+   }
+  ],
+  "total_connections": 2850,
+  "users": [
+   {
+    "hits": 62,
+    "what": "demo-user"
+   },
+   {
+    "hits": 44,
+    "what": "resolver-svc"
+   },
+   {
+    "hits": 18,
+    "what": "agent-svc"
+   },
+   {
+    "hits": 10,
+    "what": "root"
+   },
+   {
+    "hits": 4,
+    "what": "clock-svc"
+   }
+  ]
+ },
+ "beacons": [
+  {
+   "assessment": "/opt/widget/bin/widget-helper contacted relay.example.net 15 times, every 239.6 s on average with 0.6% jitter. Benign reading: /opt/widget/bin/widget-helper polling relay.example.net for updates, synchronisation or a keep-alive. Malicious reading: a command-and-control heartbeat from /opt/widget/bin/widget-helper to relay.example.net.",
+   "confidence": "high",
+   "count": 15,
+   "destination": "relay.example.net",
+   "jitter_pct": 0.6,
+   "mean_interval": 239.6,
+   "process": "/opt/widget/bin/widget-helper"
+  },
+  {
+   "assessment": "Expected service: contact between /usr/bin/note-sync and sync.example.com matches the configured expected list, so it is labelled rather than flagged. Benign reading: routine polling of sync.example.com by /usr/bin/note-sync, as the list anticipates. Malicious reading: a heartbeat to sync.example.com hidden inside traffic already trusted as /usr/bin/note-sync.",
+   "confidence": "high",
+   "count": 20,
+   "destination": "sync.example.com",
+   "jitter_pct": 1.2,
+   "mean_interval": 180.3,
+   "process": "/usr/bin/note-sync"
+  },
+  {
+   "assessment": "/usr/libexec/update-checker contacted updates.example.com 10 times, every 375.4 s on average with 15.3% jitter. Benign reading: /usr/libexec/update-checker polling updates.example.com for updates, synchronisation or a keep-alive. Malicious reading: a command-and-control heartbeat from /usr/libexec/update-checker to updates.example.com.",
+   "confidence": "medium",
+   "count": 10,
+   "destination": "updates.example.com",
+   "jitter_pct": 15.3,
+   "mean_interval": 375.4,
+   "process": "/usr/libexec/update-checker"
+  }
+ ],
+ "coverage": {
+  "from": "2026-11-01T03:00:00+01:00",
+  "slots": [
+   {
+    "covered": true,
+    "label": "03:00"
+   },
+   {
+    "covered": true,
+    "label": "04:00"
+   },
+   {
+    "covered": true,
+    "label": "05:00"
+   },
+   {
+    "covered": true,
+    "label": "06:00"
+   },
+   {
+    "covered": true,
+    "label": "07:00"
+   },
+   {
+    "covered": true,
+    "label": "08:00"
+   },
+   {
+    "covered": true,
+    "label": "09:00"
+   },
+   {
+    "covered": false,
+    "label": "10:00"
+   },
+   {
+    "covered": true,
+    "label": "11:00"
+   },
+   {
+    "covered": true,
+    "label": "12:00"
+   },
+   {
+    "covered": true,
+    "label": "13:00"
+   },
+   {
+    "covered": true,
+    "label": "14:00"
+   },
+   {
+    "covered": true,
+    "label": "15:00"
+   },
+   {
+    "covered": false,
+    "label": "16:00"
+   },
+   {
+    "covered": true,
+    "label": "17:00"
+   },
+   {
+    "covered": true,
+    "label": "18:00"
+   },
+   {
+    "covered": true,
+    "label": "19:00"
+   },
+   {
+    "covered": true,
+    "label": "20:00"
+   },
+   {
+    "covered": true,
+    "label": "21:00"
+   },
+   {
+    "covered": true,
+    "label": "22:00"
+   },
+   {
+    "covered": true,
+    "label": "23:00"
+   },
+   {
+    "covered": true,
+    "label": "00:00"
+   },
+   {
+    "covered": true,
+    "label": "01:00"
+   },
+   {
+    "covered": true,
+    "label": "02:00"
+   }
+  ],
+  "title": "Collection coverage, last 24 hours",
+  "to": "2026-11-02T03:00:00+01:00"
+ },
+ "destinations": [
+  "192.0.2.53",
+  "198.51.100.66",
+  "api.example.com",
+  "cdn.example.net",
+  "mirror.example.com",
+  "news.example.com",
+  "relay.example.net",
+  "sync.example.com",
+  "time.example.net",
+  "updates.example.com"
+ ],
+ "detections": [
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Web Protocols",
+    "technique_id": "T1071.001"
+   },
+   "confidence": "high",
+   "detail": "The firewall denied 1 attempt(s) by /usr/bin/web-browser to reach 198.51.100.66 on tcp/80.",
+   "evidence": [
+    "2026-11-02T02:20:10+01:00 deny /usr/bin/web-browser pid 2101 uid 1000 -> 198.51.100.66 tcp/80"
+   ],
+   "recommendation": "Find out why /usr/bin/web-browser tried to reach 198.51.100.66: the denial stopped the attempt but not whatever caused it.",
+   "severity": "high",
+   "title": "Denied connection from /usr/bin/web-browser to 198.51.100.66:80"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Dynamic Resolution",
+    "technique_id": "T1568"
+   },
+   "confidence": "medium",
+   "detail": "/usr/bin/web-browser reached 198.51.100.66 1 time(s), and 198.51.100.66 appears in none of the 23 prior run(s) with collected data.",
+   "evidence": [
+    "2026-11-02T02:20:10+01:00 deny /usr/bin/web-browser pid 2101 uid 1000 -> 198.51.100.66 tcp/80"
+   ],
+   "recommendation": "Confirm that 198.51.100.66 is a legitimate service for /usr/bin/web-browser; if it is routine it stops reading as new once it recurs.",
+   "severity": "medium",
+   "title": "New destination 198.51.100.66 for /usr/bin/web-browser"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Dynamic Resolution",
+    "technique_id": "T1568"
+   },
+   "confidence": "medium",
+   "detail": "/opt/widget/bin/widget-helper reached relay.example.net 15 time(s), and relay.example.net appears in none of the 23 prior run(s) with collected data.",
+   "evidence": [
+    "2026-11-02T02:01:30+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:05:27+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:09:29+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:13:28+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:17:27+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443"
+   ],
+   "recommendation": "Confirm that relay.example.net is a legitimate service for /opt/widget/bin/widget-helper; if it is routine it stops reading as new once it recurs.",
+   "severity": "medium",
+   "title": "New destination relay.example.net for /opt/widget/bin/widget-helper"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "high",
+   "detail": "/opt/widget/bin/widget-helper reached relay.example.net on port 8443 15 times, a mean of 239.6 s apart. The rhythm fits either routine polling by /opt/widget/bin/widget-helper or a control-server heartbeat to relay.example.net.",
+   "evidence": [
+    "2026-11-02T02:01:30+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:05:27+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:09:29+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:13:28+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443",
+    "2026-11-02T02:17:27+01:00 allow /opt/widget/bin/widget-helper pid 4120 uid 1000 -> relay.example.net (198.51.100.77) tcp/8443"
+   ],
+   "recommendation": "Compare the 239.6-second rhythm from /opt/widget/bin/widget-helper with its documented polling; if nothing explains it, isolate the process and investigate relay.example.net.",
+   "severity": "medium",
+   "title": "Regular-interval contact from /opt/widget/bin/widget-helper to relay.example.net"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "medium",
+   "detail": "/usr/libexec/update-checker reached updates.example.com on port 443 10 times, a mean of 375.4 s apart. The rhythm fits either routine polling by /usr/libexec/update-checker or a control-server heartbeat to updates.example.com.",
+   "evidence": [
+    "2026-11-02T02:00:50+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T02:08:13+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T02:14:04+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T02:19:56+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443",
+    "2026-11-02T02:25:31+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443"
+   ],
+   "recommendation": "Compare the 375.4-second rhythm from /usr/libexec/update-checker with its documented polling; if nothing explains it, isolate the process and investigate updates.example.com.",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/libexec/update-checker to updates.example.com"
+  }
+ ],
+ "integrity": {
+  "content_sha256": "e934beb6cb6fb827f1f8b96fa7eb55f65fb4914d6730ec84da74e7dea3757a40",
+  "prev_sha256": "238d0f6fb418e4c1947d86a20069e7328e37e053128d1e01eeed3a050320e394",
+  "run_index": 24
+ },
+ "note": "Byte counting was switched off for this window.",
+ "novel": [
+  {
+   "baseline_note": "relay.example.net appeared in 0 of 23 prior run(s) with collected data.",
+   "contacts": 15,
+   "destination": "relay.example.net",
+   "prior_runs_seen": 0,
+   "processes": [
+    "/opt/widget/bin/widget-helper"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "198.51.100.66 appeared in 0 of 23 prior run(s) with collected data.",
+   "contacts": 1,
+   "destination": "198.51.100.66",
+   "prior_runs_seen": 0,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 100
+  },
+  {
+   "baseline_note": "192.0.2.53 appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 44,
+   "destination": "192.0.2.53",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/libexec/name-resolver"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "api.example.com appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 22,
+   "destination": "api.example.com",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/home/demo-user/.local/bin/agent-runner",
+    "/usr/local/bin/model-gateway"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "sync.example.com appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 20,
+   "destination": "sync.example.com",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/bin/note-sync"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "cdn.example.net appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 15,
+   "destination": "cdn.example.net",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "updates.example.com appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 10,
+   "destination": "updates.example.com",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/libexec/update-checker"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "mirror.example.com appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 4,
+   "destination": "mirror.example.com",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "time.example.net appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 4,
+   "destination": "time.example.net",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/sbin/clock-sync"
+   ],
+   "rarity": 0
+  },
+  {
+   "baseline_note": "news.example.com appeared in 23 of 23 prior run(s) with collected data.",
+   "contacts": 3,
+   "destination": "news.example.com",
+   "prior_runs_seen": 23,
+   "processes": [
+    "/usr/bin/web-browser"
+   ],
+   "rarity": 0
+  }
+ ],
+ "rows": [
+  {
+   "action": "deny",
+   "activity": "denied by the firewall",
+   "dport": 80,
+   "dst": "198.51.100.66",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "high",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:20:10+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:57:24+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:53:23+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:49:23+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:45:22+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:41:25+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:37:26+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:33:25+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:29:24+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:25:24+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:21:25+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:17:27+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:13:28+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:29+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:05:27+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "new destination",
+   "dport": 8443,
+   "dst": "relay.example.net",
+   "is_ai": false,
+   "pid": 4120,
+   "process": "/opt/widget/bin/widget-helper",
+   "proto": "tcp",
+   "severity": "medium",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:01:30+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:59:35+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:58:51+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:57:50+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:57:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:57:12+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:57:09+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:56:28+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:55:56+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:55:55+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:54:52+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:54:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:53:57+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:53:55+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:53:11+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:52:18+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:51:38+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:50:36+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:50:34+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:50:33+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:49:47+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:49:19+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:48:55+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:48:36+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:48:35+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:48:14+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "news.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:47:46+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:47:11+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:46:33+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:46:13+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:45:55+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:45:34+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:45:12+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:45:06+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:43:49+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:43:49+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:42:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:40:54+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:40:53+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:39:33+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:39:06+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:38:56+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:37:34+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:37:15+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:37:02+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:36:46+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:36:32+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:36:03+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:35:44+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:34:51+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:33:40+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:33:30+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:33:11+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:31:16+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:30:51+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:30:30+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:28:47+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:27:45+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:27:29+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:26:19+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:25:53+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:25:31+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:25:21+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:24:53+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:24:50+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:24:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:23:13+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:22:43+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:21:41+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:21:28+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:20:57+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:19:56+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:18:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:17:44+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:17:36+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:16:55+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:16:55+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:16:40+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3410,
+   "process": "/usr/local/bin/model-gateway",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:16:21+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:15:34+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 123,
+   "dst": "time.example.net",
+   "is_ai": false,
+   "pid": 655,
+   "process": "/usr/sbin/clock-sync",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:14:39+01:00",
+   "uid": 995
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "mirror.example.com",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:14:25+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:14:04+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:13:53+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:13:30+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:13:12+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:12:51+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:12:38+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:12:31+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:12:12+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:11:11+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:10:38+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:10:16+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "sync.example.com",
+   "is_ai": false,
+   "pid": 2240,
+   "process": "/usr/bin/note-sync",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:33+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:26+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:23+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:13+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:12+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:09:02+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:08:20+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "regular-interval contact",
+   "dport": 443,
+   "dst": "updates.example.com",
+   "is_ai": false,
+   "pid": 702,
+   "process": "/usr/libexec/update-checker",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:08:13+01:00",
+   "uid": 0
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:07:58+01:00",
+   "uid": 990
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 443,
+   "dst": "cdn.example.net",
+   "is_ai": false,
+   "pid": 2101,
+   "process": "/usr/bin/web-browser",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:07:27+01:00",
+   "uid": 1000
+  },
+  {
+   "action": "allow",
+   "activity": "AI tooling, routine",
+   "dport": 443,
+   "dst": "api.example.com",
+   "is_ai": true,
+   "pid": 3300,
+   "process": "/home/demo-user/.local/bin/agent-runner",
+   "proto": "tcp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:07:13+01:00",
+   "uid": 1500
+  },
+  {
+   "action": "allow",
+   "activity": "routine",
+   "dport": 53,
+   "dst": "192.0.2.53",
+   "is_ai": false,
+   "pid": 610,
+   "process": "/usr/libexec/name-resolver",
+   "proto": "udp",
+   "severity": "low",
+   "src": "192.0.2.10",
+   "ts": "2026-11-02T02:06:43+01:00",
+   "uid": 990
+  }
+ ],
+ "run_id": "run-20261102T020002Z",
+ "schema_version": 1,
+ "started_at": "2026-11-02T03:00:02+01:00",
+ "status": "ok",
+ "totals": {
+  "agents_active": 3,
+  "ai_connections": 22,
+  "allowed": 137,
+  "beacon_candidates": 2,
+  "connections": 138,
+  "denied": 1,
+  "novel_destinations": 2,
+  "unattributed": 0,
+  "unique_destinations": 10,
+  "unique_processes": 8
+ },
+ "trimmed": false,
+ "volume": {
+  "available": false,
+  "note": "Volume unavailable: this window carries no measured byte counts, and no figure is estimated in their place.",
+  "rows": []
+ },
+ "window_end": "2026-11-02T03:00:00+01:00",
+ "window_start": "2026-11-02T02:00:00+01:00"
+}

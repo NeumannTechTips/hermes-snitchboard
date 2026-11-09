@@ -1,0 +1,175 @@
+{
+ "coverage": {
+  "from": "2026-10-31T04:00:00+01:00",
+  "slots": [
+   {
+    "covered": false,
+    "label": "04:00"
+   },
+   {
+    "covered": false,
+    "label": "05:00"
+   },
+   {
+    "covered": false,
+    "label": "06:00"
+   },
+   {
+    "covered": false,
+    "label": "07:00"
+   },
+   {
+    "covered": false,
+    "label": "08:00"
+   },
+   {
+    "covered": false,
+    "label": "09:00"
+   },
+   {
+    "covered": false,
+    "label": "10:00"
+   },
+   {
+    "covered": false,
+    "label": "11:00"
+   },
+   {
+    "covered": false,
+    "label": "12:00"
+   },
+   {
+    "covered": false,
+    "label": "13:00"
+   },
+   {
+    "covered": false,
+    "label": "14:00"
+   },
+   {
+    "covered": false,
+    "label": "15:00"
+   },
+   {
+    "covered": false,
+    "label": "16:00"
+   },
+   {
+    "covered": false,
+    "label": "17:00"
+   },
+   {
+    "covered": false,
+    "label": "18:00"
+   },
+   {
+    "covered": false,
+    "label": "19:00"
+   },
+   {
+    "covered": false,
+    "label": "20:00"
+   },
+   {
+    "covered": false,
+    "label": "21:00"
+   },
+   {
+    "covered": false,
+    "label": "22:00"
+   },
+   {
+    "covered": false,
+    "label": "23:00"
+   },
+   {
+    "covered": false,
+    "label": "00:00"
+   },
+   {
+    "covered": true,
+    "label": "01:00"
+   },
+   {
+    "covered": true,
+    "label": "02:00"
+   },
+   {
+    "covered": true,
+    "label": "03:00"
+   }
+  ],
+  "title": "Collection coverage, last 24 hours",
+  "to": "2026-11-01T04:00:00+01:00"
+ },
+ "destinations": [
+  "192.0.2.53",
+  "api.example.com",
+  "cdn.example.net",
+  "mirror.example.com",
+  "news.example.com",
+  "sync.example.com",
+  "time.example.net",
+  "updates.example.com"
+ ],
+ "detections": [
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "medium",
+   "detail": "/usr/libexec/update-checker reached updates.example.com on port 443 12 times, a mean of 309.9 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T03:00:50+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443"
+   ],
+   "recommendation": "Compare the 309.9-second rhythm from /usr/libexec/update-checker with its documented polling; if nothing explains it, isolate the process and investigate...",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/libexec/update-checker to updates.example.com"
+  },
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "low",
+   "detail": "/usr/local/bin/model-gateway reached api.example.com on port 443 8 times, a mean of 404.6 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T03:06:06+01:00 allow /usr/local/bin/model-gateway pid 3410 uid 1000 -> api.example.com (203.0.113.10) tcp/443"
+   ],
+   "recommendation": "Compare the 404.6-second rhythm from /usr/local/bin/model-gateway with its documented polling; if nothing explains it, isolate the process and investigate...",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/local/bin/model-gateway to api.example.com"
+  }
+ ],
+ "integrity": {
+  "content_sha256": "6d97ff1f0b787587b049becd34c2fb2cfdd8738f5afd5fa0b8c0bba60dc6d801",
+  "prev_sha256": "7b6adaf6674f335a16538d252e35727126b349fc16c73a940ba5a7dc1d4b9af5",
+  "run_index": 2,
+  "sealed_sha256": "ec6483035466d6a8811c60176c549d7cf8b37e011317f5906bacdb402347f53a"
+ },
+ "note": "",
+ "run_id": "run-20261101T030002Z",
+ "schema_version": 1,
+ "started_at": "2026-11-01T04:00:02+01:00",
+ "status": "ok",
+ "totals": {
+  "agents_active": 3,
+  "ai_connections": 24,
+  "allowed": 125,
+  "beacon_candidates": 2,
+  "connections": 125,
+  "denied": 0,
+  "novel_destinations": 0,
+  "unattributed": 0,
+  "unique_destinations": 8,
+  "unique_processes": 7
+ },
+ "trimmed": true,
+ "window_end": "2026-11-01T04:00:00+01:00",
+ "window_start": "2026-11-01T03:00:00+01:00"
+}

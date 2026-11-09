@@ -1,0 +1,10 @@
+{
+  "name": "hermes-snitchboard",
+  "label": "Hermes Snitchboard",
+  "icon": "Shield",
+  "tab": {
+    "path": "/hermes-snitchboard"
+  },
+  "entry": "dist/index.js",
+  "api": "plugin_api.py"
+}

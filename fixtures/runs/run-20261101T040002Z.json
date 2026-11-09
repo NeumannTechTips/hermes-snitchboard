@@ -1,0 +1,159 @@
+{
+ "coverage": {
+  "from": "2026-10-31T05:00:00+01:00",
+  "slots": [
+   {
+    "covered": false,
+    "label": "05:00"
+   },
+   {
+    "covered": false,
+    "label": "06:00"
+   },
+   {
+    "covered": false,
+    "label": "07:00"
+   },
+   {
+    "covered": false,
+    "label": "08:00"
+   },
+   {
+    "covered": false,
+    "label": "09:00"
+   },
+   {
+    "covered": false,
+    "label": "10:00"
+   },
+   {
+    "covered": false,
+    "label": "11:00"
+   },
+   {
+    "covered": false,
+    "label": "12:00"
+   },
+   {
+    "covered": false,
+    "label": "13:00"
+   },
+   {
+    "covered": false,
+    "label": "14:00"
+   },
+   {
+    "covered": false,
+    "label": "15:00"
+   },
+   {
+    "covered": false,
+    "label": "16:00"
+   },
+   {
+    "covered": false,
+    "label": "17:00"
+   },
+   {
+    "covered": false,
+    "label": "18:00"
+   },
+   {
+    "covered": false,
+    "label": "19:00"
+   },
+   {
+    "covered": false,
+    "label": "20:00"
+   },
+   {
+    "covered": false,
+    "label": "21:00"
+   },
+   {
+    "covered": false,
+    "label": "22:00"
+   },
+   {
+    "covered": false,
+    "label": "23:00"
+   },
+   {
+    "covered": false,
+    "label": "00:00"
+   },
+   {
+    "covered": true,
+    "label": "01:00"
+   },
+   {
+    "covered": true,
+    "label": "02:00"
+   },
+   {
+    "covered": true,
+    "label": "03:00"
+   },
+   {
+    "covered": true,
+    "label": "04:00"
+   }
+  ],
+  "title": "Collection coverage, last 24 hours",
+  "to": "2026-11-01T05:00:00+01:00"
+ },
+ "destinations": [
+  "192.0.2.53",
+  "api.example.com",
+  "cdn.example.net",
+  "mirror.example.com",
+  "news.example.com",
+  "sync.example.com",
+  "time.example.net",
+  "updates.example.com"
+ ],
+ "detections": [
+  {
+   "attack": {
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "technique": "Application Layer Protocol",
+    "technique_id": "T1071"
+   },
+   "confidence": "medium",
+   "detail": "/usr/libexec/update-checker reached updates.example.com on port 443 10 times, a mean of 382.1 s apart. The rhythm fits either routine polling by...",
+   "evidence": [
+    "2026-11-01T04:00:50+01:00 allow /usr/libexec/update-checker pid 702 uid 0 -> updates.example.com (198.51.100.50) tcp/443"
+   ],
+   "recommendation": "Compare the 382.1-second rhythm from /usr/libexec/update-checker with its documented polling; if nothing explains it, isolate the process and investigate...",
+   "severity": "low",
+   "title": "Regular-interval contact from /usr/libexec/update-checker to updates.example.com"
+  }
+ ],
+ "integrity": {
+  "content_sha256": "872b5f675986e37b4e8ac99302ef2707c156601a033b22f014601c74adfd9fcc",
+  "prev_sha256": "ec6483035466d6a8811c60176c549d7cf8b37e011317f5906bacdb402347f53a",
+  "run_index": 3,
+  "sealed_sha256": "941c24b2b8d3dd43f1ffedecda28545d755541a73cf7ad31ef7e1923cfe3d10b"
+ },
+ "note": "",
+ "run_id": "run-20261101T040002Z",
+ "schema_version": 1,
+ "started_at": "2026-11-01T05:00:02+01:00",
+ "status": "ok",
+ "totals": {
+  "agents_active": 3,
+  "ai_connections": 16,
+  "allowed": 114,
+  "beacon_candidates": 1,
+  "connections": 114,
+  "denied": 0,
+  "novel_destinations": 0,
+  "unattributed": 0,
+  "unique_destinations": 8,
+  "unique_processes": 7
+ },
+ "trimmed": true,
+ "window_end": "2026-11-01T05:00:00+01:00",
+ "window_start": "2026-11-01T04:00:00+01:00"
+}

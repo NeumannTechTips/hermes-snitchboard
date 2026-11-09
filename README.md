@@ -134,6 +134,11 @@ Built for [Hermes Agent](https://github.com/NousResearch/hermes-agent) by
 [OpenSnitch](https://github.com/evilsocket/opensnitch) collects. Findings are mapped to
 [MITRE ATT&CK](https://attack.mitre.org/).
 
+The avatar set in the banner is the Nous Research character mark, which also ships in the Hermes
+Agent repository under `assets/`. It appears here as a visual nod to the project this plugin is
+built for, and it carries no suggestion of endorsement. The notice at the head of this document
+governs: this plugin is unofficial, and Nous Research neither supports nor sponsors it.
+
 ## References
 
 - [Hermes Agent, extending the dashboard](https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard)

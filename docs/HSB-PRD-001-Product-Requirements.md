@@ -3,244 +3,362 @@
 | Field | Detail |
 |---|---|
 | Document ID | HSB-PRD-001 |
-| Version | 0.1, draft for sign-off |
+| Version | 1.0, approved |
 | Date | 9 November 2026 |
 | Owner | NeumannTechTips |
-| Repository | `NeumannTechTips/hermes-snitchboard` |
-| Plugin name | `hermes-snitchboard` (display title "Snitchboard") |
-| Status | Not signed off. No build work starts before an explicit go-ahead |
+| Repository | `NeumannTechTips/hermes-snitchboard` (private until the gate in section 11.3 passes) |
+| Plugin name | `hermes-snitchboard`, display title "Snitchboard" |
+| Target | Hermes Agent v0.23.0 or later, Linux |
+| Status | **Approved for build on 9 November 2026.** Scope decision: full-fidelity port, built in priority tiers |
 
 ---
 
 ## 1. Problem
 
-Hermes Agent can run shell commands, call tools and reach the network on the owner's behalf. The agent can describe what it did, and application-level tooling can record which model requests it made. Neither answers the question a careful owner actually asks: **what did my machine really connect to, and can I trust the record of it?**
+Hermes Agent runs shell commands, calls tools and reaches the network on its owner's behalf. The agent can report what it did, and application-layer tooling can record which model requests it issued. Neither answers the question a careful owner actually asks: what did this machine really connect to, and can the record of it be trusted?
 
-An operating-system firewall such as OpenSnitch already observes every outbound connection and the process that made it. That evidence is rich, but it sits in a database that few people read, and nothing tells the owner which connections are routine, which are new, which look like a heartbeat and which belong to AI tooling. Records stored as plain rows can also be edited after the fact without anyone noticing.
+An operating-system firewall such as OpenSnitch already observes every outbound connection together with the process responsible. That evidence is rich, yet it sits in a database few people open, and nothing in it distinguishes routine traffic from a destination seen for the first time, a heartbeat, or a connection made by AI tooling. Records held as ordinary rows can also be altered afterwards without anyone noticing.
 
-Snitchboard closes that gap. It turns OpenSnitch's connection evidence into a dashboard tab inside Hermes: a plain-language view of recent outbound activity, mapped to MITRE ATT&CK, with a hash chain that shows whether the stored history has been altered.
+Snitchboard closes that gap. It presents OpenSnitch connection evidence as a tab inside the Hermes dashboard: plain-language findings mapped to MITRE ATT&CK, with a hash chain that makes alteration of the stored history detectable.
 
 ## 2. Success criteria
 
-| ID | Criterion | How it is measured |
+| ID | Criterion | Measurement |
 |---|---|---|
-| SC1 | A reviewer with no OpenSnitch installed can see a complete, working dashboard within two minutes of installing | Demo mode renders every panel from bundled synthetic data, labelled as demo |
-| SC2 | The plugin passes `hermes plugins validate --install-deps` and `hermes plugins doctor . --ci` with no failures at the pinned commit | Both commands run in CI and locally |
-| SC3 | The plugin has no third-party runtime dependencies | `plugin.yaml` declares none, and the test suite imports only the standard library |
-| SC4 | No personal or traceable data appears anywhere in the repository, its history, its screenshots or its video | History-wide pattern scan, fixture-range test and manual screenshot review all pass before the repository is made public |
-| SC5 | The analysis engine reproduces the rules in section 6 exactly | Unit tests with fixed fixtures for each rule, including boundary values |
-| SC6 | Tampering with any stored record is detected | A test edits one record and one link in a chain and confirms that verification fails and names the first broken run |
-| SC7 | The submission is complete before the deadline with a clear margin | Pull request opened, video posted and form submitted at least four hours before the cut-off |
+| SC1 | A reviewer without OpenSnitch sees a complete, working dashboard within two minutes of installing | Demonstration mode renders every shipped panel from bundled synthetic data, clearly badged |
+| SC2 | `hermes plugins validate . --install-deps` and `hermes plugins doctor . --ci` pass at the pinned commit | Both run in continuous integration and locally |
+| SC3 | No third-party runtime dependency | `plugin.yaml` declares none, and the engine imports only the standard library |
+| SC4 | No personal or traceable data in the repository, its history, its screenshots or the video | History-wide scan, fixture range test and manual review all pass before publication |
+| SC5 | The engine reproduces the rules in section 7.4 exactly | Unit tests with fixed fixtures for every rule, including boundary values |
+| SC6 | Alteration of any stored record is detected | A test edits one record and one chain link, then confirms verification fails and names the first broken run |
+| SC7 | Every run record validates against the schema in section 7.3 | A schema validator runs over all fixtures and over collector output |
+| SC8 | The submission is complete with a clear margin | Pull request opened, video posted and form submitted at least four hours before the cut-off |
 
 ## 3. Scope
 
-### In scope for version 1
+### 3.1 In scope
 
-- A dashboard tab (`dashboard/manifest.json`, one hand-written JavaScript file, optional stylesheet) showing: overview totals, hourly coverage, detections with ATT&CK mapping, beacon candidates, novel destinations, AI-process and account activity, and chain verification.
-- A read-only backend (`dashboard/plugin_api.py`) serving run records from a configured directory.
-- A deterministic analysis engine in Python using only the standard library.
-- A reference collector, run by the user and not by Hermes, that builds run records from the OpenSnitch statistics database (priority P1, see section 8).
-- Demo mode with synthetic data generated by a committed script.
-- Redaction of addresses and names in the interface by default.
-- Documentation: README, this PRD, a run-record schema reference and a security note.
+A dashboard tab reproducing the full detail of the owner's existing OpenSnitch monitoring page, rebuilt against the Hermes plugin surfaces:
 
-### Explicitly out of scope
+- A read-only backend serving run records from a configured directory.
+- A deterministic analysis engine in Python, standard library only.
+- Seventeen interface elements across three priority tiers, listed in section 7.9.
+- A reference collector, run by the owner rather than by Hermes, building run records from the OpenSnitch statistics database.
+- Demonstration mode backed by synthetic data from a committed generator.
+- Redaction of addresses and names by default.
+- Documentation: README, this document, a schema reference and a security note.
 
-- Any action on the host: no blocking, no rule creation, no process control. The plugin observes and reports.
-- Any model call, any network call and any telemetry.
-- Decrypting or describing traffic content. Connections are reported as events with byte counts where available, never as content.
+### 3.2 Out of scope
+
+- Any action on the host. The plugin neither blocks, allows nor alters anything. It observes and reports.
+- Any model call, outbound network call or telemetry.
+- Decrypting or describing traffic content. A connection is reported as an event with byte counts where measured, never as content.
 - Agent tools, hooks or middleware. Version 1 registers no capabilities.
-- A Desktop pane, Windows or macOS support, and platforms other than Linux.
-- Correlating connections to individual Hermes tool calls (a candidate for a later version).
-- Anchoring the hash chain outside the machine, such as a signed timestamp (candidate for a later version).
+- A Desktop pane, and any platform other than Linux.
+- Correlating connections with individual Hermes tool calls, which is a candidate for a later version.
+- Anchoring the hash chain outside the machine, such as a signed timestamp.
 
-## 4. Users and use cases
+## 4. Users
 
 | User | Need | Served by |
 |---|---|---|
-| Single-user Linux owner running Hermes and OpenSnitch | See what the machine connected to, spot anything new | Collector writes run records, dashboard reads them |
-| Operator running Hermes under a separate service account | Review evidence without giving the agent access to the raw firewall database | The collector runs under the owner's account and writes to a shared directory. The plugin reads only that directory |
-| Security or assurance reviewer | Evidence that a record has not been edited, and a defensible mapping of findings to ATT&CK | Hash chain verification and the technique table |
-| Hackathon reviewer | See value quickly without special setup | Demo mode |
+| Single-user Linux owner running Hermes and OpenSnitch | See what the machine reached, and notice anything new | Collector writes records, the tab reads them |
+| Operator running Hermes under a separate service account | Review the evidence without granting the agent access to the raw firewall database | The collector runs under the owner's account; the plugin reads only a directory of records |
+| Security or assurance reviewer | Evidence that a record has not been edited, and a defensible mapping to ATT&CK | Chain verification and the technique table |
+| Hackathon reviewer | Judge the work quickly, without special setup | Demonstration mode |
 
-## 5. Requirements
+## 5. Findings from the reference implementation
 
-### 5.1 Functional
+The owner's existing page was examined on 9 November 2026. Two findings shape the design and are recorded because they are easy to miss.
+
+**5.1 The stored records are not schema-consistent.** Of twenty-eight runs, only two carry the detailed fields `agents`, `aggregates`, `beacons`, `novel`, `rows` and `volume`. Twenty-six are marked `trimmed`. Of ninety-two detections, only seven carry the full set of `attack`, `confidence`, `detail`, `evidence` and `recommendation`; the remainder hold `severity` and `title` alone. A distributable plugin cannot render reliably against records of varying shape, so section 7.3 defines a strict schema with a declared full form and a declared trimmed form, and section 9 requires a validator.
+
+**5.2 Trimming breaks novelty unless a digest is retained.** Novelty is computed by counting how many prior runs contained each destination. A trimmed record that discards its destinations makes that count impossible. Trimmed records must therefore retain a compact destination set, as specified in section 7.3.
+
+Two further points are favourable. The existing charts are already inline SVG driven by CSS variables rather than a charting library, so they transfer directly, which matters because the Hermes dashboard SDK ships no chart component. The only external dependency is a web font, and the only runtime coupling is a single browser API used for storage and downloads.
+
+## 6. Requirements
+
+### 6.1 Functional
 
 | ID | Requirement |
 |---|---|
-| FR1 | The tab shows the latest run: totals, coverage strip, detections, beacons, novel destinations, agents and a ranked connection table (capped at 120 rows) |
+| FR1 | The tab renders the most recent run across every shipped panel |
 | FR2 | A run selector lists stored runs, newest first, and any run can be opened |
-| FR3 | A **Verify chain** control recomputes every hash and reports either "chain intact" or the first run at which it breaks |
-| FR4 | Every finding shows title, severity, confidence, ATT&CK technique and tactic, detail, evidence as literal observed records and a concrete recommendation |
-| FR5 | Every beacon assessment names both the benign and the malicious explanation |
-| FR6 | Absence of collection is labelled as absence of collection and never presented as an all-clear. An hour with no run, or a run with status `no_data`, is shown as not covered |
-| FR7 | Volume is shown only when the run record carries measured byte counts. Otherwise the panel states that volume is unavailable and shows no estimate |
-| FR8 | Demo mode is used automatically when no real records exist, and is badged on every panel |
-| FR9 | Addresses, hostnames, hardware addresses and process arguments are masked by default, with a deliberate reveal control |
-| FR10 | Timestamps are shown with their original UTC offset and are never relabelled as UTC |
+| FR3 | A verification control recomputes every hash and reports either an intact chain or the first run at which it breaks |
+| FR4 | Each finding shows title, severity, confidence, ATT&CK technique and tactic, detail, evidence as literal observed records, and a concrete recommendation |
+| FR5 | Each beacon assessment names both the benign and the malicious explanation |
+| FR6 | Absence of collection is labelled as absence of collection and never presented as an all-clear. An hour with no run, or a run whose status is not `ok`, is shown as not covered |
+| FR7 | Volume is shown only where the record carries measured byte counts. Otherwise the panel states that volume is unavailable, and no figure is estimated |
+| FR8 | Demonstration mode is selected automatically when no real records are present, and is badged on the tab and in every panel that displays data |
+| FR9 | Addresses, host names, hardware addresses and process arguments are masked by default, with a deliberate control to reveal them |
+| FR10 | Timestamps are displayed with their original UTC offset and are never relabelled as UTC |
+| FR11 | A record whose shape does not satisfy the schema is reported in the interface as a malformed record, and does not prevent other records from rendering |
+| FR12 | The caveat notes in section 7.9 are displayed in full and are not collapsible by default |
 
-### 5.2 Non-functional
-
-| ID | Requirement |
-|---|---|
-| NFR1 | Standard library only. No bundler, no minification, no vendored binaries. All source is readable |
-| NFR2 | The dashboard loads nothing from external hosts: no fonts, no scripts, no images. It uses the dashboard's own theme variables |
-| NFR3 | Route handlers never block the event loop (`async def` with `asyncio.to_thread`, or plain `def`) |
-| NFR4 | Run records are limited to 200 KiB each, and the API enforces a size and count limit on every response |
-| NFR5 | Supports Hermes `>=0.23.0`, the version the plugin is tested on, and Python versions supported by that release |
-| NFR6 | Tests run in under one minute with no network and no OpenSnitch present |
-
-### 5.3 Security and privacy
+### 6.2 Non-functional
 
 | ID | Requirement |
 |---|---|
-| SP1 | All routes are `GET` and read-only. The plugin writes nothing except, optionally, its own settings through Hermes |
-| SP2 | The plugin never opens the OpenSnitch database. Only the collector does, read-only, under the user's own account |
-| SP3 | Route parameters are validated against a strict pattern. No client-supplied path reaches the filesystem |
-| SP4 | The plugin never reads `.env`, `auth.json`, browser profiles, keychains or any credential store |
-| SP5 | Synthetic data uses only documentation ranges: IPv4 `192.0.2.0/24`, `198.51.100.0/24` and `203.0.113.0/24` (RFC 5737), IPv6 `2001:db8::/32` (RFC 3849), domains under `example.com` and `example.net` (RFC 2606), and hardware addresses `00-00-5E-00-53-00` to `00-00-5E-00-53-FF` (RFC 7042). A test fails the build if any fixture value falls outside these ranges |
-| SP6 | The integrity feature is described honestly: it makes edits detectable, it does not prove that the records match the real network, and an attacker who can rewrite every record can recompute the chain |
+| NFR1 | Standard library only. No bundler, no minifier, no vendored binary, no committed bytecode. Every source file is readable as committed |
+| NFR2 | The tab loads nothing from an external host. No fonts, no scripts, no images, no stylesheets. Colour and type come from the dashboard theme variables |
+| NFR3 | Route handlers never block the event loop. Use `async def` with `asyncio.to_thread`, or a plain `def` handler |
+| NFR4 | A full run record is capped at 200 KiB, a trimmed record at 8 KiB, and every response is bounded in both size and count |
+| NFR5 | The initial tab load transfers no more than one full record plus the run summaries |
+| NFR6 | Tests complete in under one minute, with no network access and no OpenSnitch present |
+| NFR7 | The tab is legible in both the light and the dark dashboard themes |
 
-## 6. Design
+### 6.3 Security and privacy
 
-### 6.1 Components
+| ID | Requirement |
+|---|---|
+| SP1 | Every route is a `GET` and is read-only. The plugin writes nothing beyond its own settings through Hermes |
+| SP2 | The plugin never opens the OpenSnitch database. Only the collector does so, read-only, under the owner's own account |
+| SP3 | Route parameters are validated against a strict pattern. No value supplied by a client reaches the filesystem as a path |
+| SP4 | The plugin never reads `.env`, `auth.json`, browser profiles, key stores or any credential file |
+| SP5 | Interface content is produced as React elements so that escaping is automatic. Raw markup injection is prohibited anywhere record data is rendered |
+| SP6 | Synthetic data uses documentation ranges only: IPv4 192.0.2.0/24, 198.51.100.0/24 and 203.0.113.0/24 (RFC 5737), IPv6 2001:db8::/32 (RFC 3849), names under example.com and example.net (RFC 2606), and hardware addresses 00-00-5E-00-53-00 to 00-00-5E-00-53-FF (RFC 7042). A test fails the build if any fixture value falls outside these ranges |
+| SP7 | The integrity feature is described honestly. It makes alteration detectable. It does not prove that records match the real network, and an adversary able to rewrite every record can recompute the chain |
+
+## 7. Design
+
+### 7.1 Components
 
 ```
- OpenSnitch statistics database                (read-only, user's own account)
+ OpenSnitch statistics database        read-only, the owner's own account
             |
             v
-   collector/snitchboard_collect.py            (optional, run by the user, not by Hermes)
-            |  writes one JSON run record per run, hash-chained
+ collector/snitchboard_collect.py      optional, run by the owner, never by Hermes
+            |   one hash-chained JSON record per run
             v
-   runs directory  (default: <HERMES_HOME>/plugin-data/hermes-snitchboard/runs/)
+ runs directory                        default <HERMES_HOME>/plugin-data/hermes-snitchboard/runs/
             |
             v
-   dashboard/plugin_api.py   (GET only)  --->  dashboard/dist/index.js   (tab in Hermes)
+ dashboard/plugin_api.py  (GET only) -> dashboard/dist/index.js  (tab)
 ```
 
-The viewer and the collector are deliberately separate. The plugin that runs inside the Hermes dashboard process cannot reach the raw firewall database, which keeps its privileges small and suits setups where Hermes runs under a different account from the owner.
+The viewer and the collector are separate by design. The component running inside the dashboard process never reaches the firewall database, which keeps its privileges small and supports hosts where Hermes runs under a different account from the owner.
 
-### 6.2 Run record (schema version 1)
+### 7.2 Repository layout
 
-Top-level keys: `schema_version`, `run_id`, `started_at`, `window_start`, `window_end`, `status` (`ok`, `partial` or `no_data`), `note`, `coverage`, `totals`, `detections`, `beacons`, `novel`, `agents`, `volume`, `rows`, `aggregates` and `integrity`. Timestamps are ISO 8601 with an explicit offset. Limits: 120 rows, 20 hosts, 15 addresses, 15 novel destinations, 16 beacons, 200 KiB per record. Default retention is 14 days. The full schema is documented in `docs/` once the engine is written.
+The skeleton exists as of commit `41d3acb`.
 
-### 6.3 Analysis rules
+```
+.github/workflows/   tests, validation, history and fixture scans
+dashboard/
+  manifest.json      tab registration
+  plugin_api.py      read-only routes, module-level `router`
+  dist/index.js      hand-written IIFE, no build step
+  dist/style.css     optional, theme variables only
+snitchboard/         schema, canonical hashing, analysis, redaction
+collector/
+  snitchboard_collect.py
+  systemd/           timer and service unit templates
+fixtures/            synthetic records only
+tools/               demonstration generator, scan scripts
+tests/
+docs/                this document, schema reference, security note, assets
+plugin.yaml          manifest
+__init__.py          minimal register(ctx) that registers nothing
+```
 
-All thresholds are configurable. The defaults are as follows.
+### 7.3 Run record schema, version 1
+
+Every record carries `schema_version`, `run_id`, `started_at`, `window_start`, `window_end`, `status`, `trimmed`, `note`, `coverage`, `totals` and `integrity`. Timestamps are ISO 8601 with an explicit offset.
+
+`status` takes one of `ok`, `partial` or `no_data`. The reference implementation used `collection_unavailable`, which maps to `no_data`.
+
+A record where `trimmed` is false additionally carries `detections`, `beacons`, `novel`, `agents`, `volume`, `rows` and `aggregates`. A record where `trimmed` is true carries `detections` in summary form plus `destinations`, a sorted list of the destinations observed, retained so that novelty stays computable. This is the requirement identified in section 5.2.
+
+| Field | Shape |
+|---|---|
+| `coverage` | `{title, from, to, slots: [{label, covered}]}`, 24 slots |
+| `totals` | `{connections, allowed, denied, unique_processes, unique_destinations, ai_connections, unattributed, novel_destinations, beacon_candidates, agents_active}`, all integers |
+| `detections[]` | `{title, severity, confidence, attack: {technique, technique_id, tactic, tactic_id}, detail, evidence: [str], recommendation}`. All fields are mandatory; the partial form seen in section 5.1 is not permitted |
+| `beacons[]` | `{process, destination, count, mean_interval, jitter_pct, confidence, assessment}` |
+| `novel[]` | `{destination, rarity, contacts, processes, prior_runs_seen, baseline_note}` |
+| `agents[]` | `{process, pid, user, connections, ports, destinations, privilege_note, verdict}` |
+| `volume` | `{available: bool, note, rows: [{process, destination, sent_bytes, recv_bytes, flows, assessment}]}` |
+| `rows[]` | `{ts, action, src, dst, dport, proto, uid, pid, process, activity, is_ai, severity}` |
+| `aggregates` | `{daemon_uptime, total_connections, dropped, rules, procs[], hosts[], users[], ports[], addrs[], node{}, rules_detail[], sockets[]}`, where each aggregate list holds `{what, hits}` |
+| `aggregates.node` | `{addr, hostname, daemon_version, daemon_uptime, daemon_rules, cons, cons_dropped, version, status, last_connection}` |
+| `aggregates.rules_detail[]` | `{name, enabled, precedence, action, duration, operator_type, operator_operand, operator_data, created}` |
+| `integrity` | `{content_sha256, prev_sha256, run_index}` |
+
+Caps: 120 rows, 45 volume rows, 20 hosts, 15 addresses, 15 novel destinations, 16 beacons. Severity is one of `high`, `medium` or `low`. Confidence is one of `high`, `medium` or `low`. Default retention is fourteen days, after which a full record is trimmed rather than deleted, so the chain survives.
+
+Integrity is the SHA-256 of the canonical JSON of the record with the `integrity` block removed, keys sorted, no whitespace. Trimming changes the content and therefore breaks the hash, so a trimmed record carries the original `content_sha256` unchanged in a `sealed_sha256` field and sets `trimmed` to true. Verification treats a trimmed record as a link whose content cannot be re-derived, states this plainly, and continues the chain. This limitation is disclosed in the interface rather than hidden.
+
+### 7.4 Analysis rules
+
+Thresholds are configurable; the defaults follow.
 
 | Analysis | Rule |
 |---|---|
-| Coverage | One slot per hour from the first recorded run to now. An hour with no run, or only a `no_data` run, is not covered |
-| Novelty | For each destination, count the prior runs (up to 48) that contained it. Rarity is 100 when never seen, scaling to 0 when present in every prior run. Report the top 15 |
-| Beaconing | For each process and destination pair with at least eight contacts, excluding port 53, compute the mean interval and the jitter as a coefficient of variation in per cent. Report pairs with a mean between 20 seconds and 2 hours and jitter below 60 per cent, ordered by jitter. Confidence is high below 10 per cent, medium below 25, otherwise low. Every assessment states the benign and the malicious reading. Configured expected services (for example time synchronisation and local discovery multicast) are labelled as expected, not flagged |
-| Volume | Used only if the record carries measured per-flow byte counts joined to the owning process. Ranked by total bytes, capped at 45 rows, with an assessment from the sent and received ratio. Flows that opened before the window and could not be paired are labelled as such |
-| Agents | One row per configured AI process and per configured non-standard account: connections, ports, destinations, privilege note and verdict |
-| Integrity | SHA-256 of the canonical JSON of the record with the integrity block removed, keys sorted, no whitespace. The integrity block holds `content_sha256`, `prev_sha256` (null for the first run) and `run_index` |
+| Coverage | One slot per hour across the last 24 hours. An hour with no run, or whose run status is not `ok`, is not covered |
+| Novelty | For each destination, count the prior runs, up to 48, that contained it. Rarity is 100 when never seen, scaling to 0 when present in every prior run. Report the top 15 |
+| Beaconing | For each process and destination pair with at least eight contacts, excluding port 53, compute the mean interval and the jitter as a coefficient of variation in per cent. Report pairs whose mean falls between 20 seconds and 2 hours with jitter below 60 per cent, ordered by jitter. Confidence is high below 10 per cent, medium below 25 per cent, otherwise low. Every assessment states both the benign and the malicious reading. Services named in the expected list are labelled as expected rather than flagged |
+| Volume | Used only where the record carries measured per-flow byte counts joined to the owning process. Ranked by total bytes, capped at 45 rows, with an assessment derived from the sent and received ratio. A flow that opened before the window and could not be paired is labelled as such |
+| Agents | One row for each configured AI process and each configured non-standard account, giving connections, ports, destinations, a privilege note and a verdict |
+| Integrity | As specified in section 7.3 |
 
-### 6.4 ATT&CK mapping
+### 7.5 ATT&CK mapping
 
 | Pattern | Technique | Tactic |
 |---|---|---|
 | Regular-interval outbound sessions | T1071 Application Layer Protocol | TA0011 Command and Control |
 | Web-protocol application channels | T1071.001 Web Protocols | TA0011 |
 | Unusual DNS volume or resolvers | T1071.004 DNS | TA0011 |
-| Many distinct or odd domains | T1568 Dynamic Resolution | TA0011 |
-| Non-standard destination port, as a command and control channel | T1571 Non-Standard Port | TA0011 |
+| Many distinct or unusual domains | T1568 Dynamic Resolution | TA0011 |
+| Non-standard destination port, as a control channel | T1571 Non-Standard Port | TA0011 |
 | Non-standard destination port, as an exfiltration channel | T1048 Exfiltration Over Alternative Protocol | TA0010 Exfiltration |
 | Sustained transfer to a service endpoint | T1567 Exfiltration Over Web Service | TA0010 |
-| Account used beyond its need | T1078 Valid Accounts | Not tied to one tactic |
+| An account used beyond its need | T1078 Valid Accounts | Not tied to a single tactic |
 
-T1571 was confirmed against the MITRE ATT&CK site. The remaining identifiers and names are checked against the same source in the release checklist, and a test confirms that the engine emits only identifiers present in a bundled list.
+T1571 was verified against the ATT&CK site and is included on the owner's decision. A bundled list of permitted identifiers is checked by a test, so the engine cannot emit an identifier that is not on it. The remaining names are confirmed during the release checklist.
 
-### 6.5 Severity
+### 7.6 Severity
 
-| Level | Conditions (defaults) |
+| Level | Default conditions |
 |---|---|
-| High | Connections with no attributable process. An AI process on a non-standard port. Any denied connection. A destination never seen before, reached by an AI process during configured unattended hours. Traffic from a configured agent account to a destination not on its allowlist. An outbound-dominant transfer above 1 MB to an unidentified destination |
-| Medium | A new destination for a known process. Third-party telemetry reached by an AI process. High-confidence beaconing |
-| Low | Everything else worth recording |
+| High | A connection with no attributable process. An AI process on a non-standard port. Any denied connection. A destination never previously seen, reached by AI tooling during configured unattended hours. Traffic from a configured agent account to a destination absent from its allowlist. An outbound-dominant transfer above 1 MB to an unidentified destination |
+| Medium | A new destination for a known process. Third-party telemetry reached by AI tooling. High-confidence beaconing |
+| Low | Anything else worth recording |
 
-The allowlist replaces a blanket rule that all agent-account traffic is high severity. Without it, every legitimate provider connection would be flagged.
+The provider allowlist replaces a blanket rule treating all agent-account traffic as high severity. Without it, every legitimate provider connection would be flagged, and the panel would be useless.
 
-### 6.6 Backend routes
+### 7.7 Backend routes
 
-All routes sit under `/api/plugins/hermes-snitchboard/`, behind the dashboard's authentication.
+All routes sit beneath `/api/plugins/hermes-snitchboard/`, behind the dashboard authentication gate.
 
-| Route | Purpose |
+| Route | Returns |
 |---|---|
-| `GET /health` | Mode (demo or live), runs directory status, record count |
-| `GET /settings` | Non-sensitive effective settings |
-| `GET /runs` | Run list (identifier, window, status, severity counts), newest first, bounded |
-| `GET /runs/latest` | Latest run record, redacted by default |
-| `GET /runs/{run_id}` | One run record. The identifier must match a fixed pattern |
-| `GET /verify` | Recomputes the chain and returns intact or the first break |
+| `GET /health` | Mode, runs directory status, record count, schema version |
+| `GET /settings` | Effective settings, excluding anything sensitive |
+| `GET /runs?limit=&offset=` | Run summaries only: identifier, window, status, severity counts, trimmed flag. Bounded and paginated |
+| `GET /runs/latest` | The most recent full record, redacted unless reveal is requested |
+| `GET /runs/{run_id}` | One record. The identifier must match a fixed pattern |
+| `GET /series?n=24` | Compact series for the chart: per-run connection, AI, denied and timestamp values |
+| `GET /verify` | Recomputes the chain and reports an intact result or the first break |
 
-### 6.7 Settings (`config_schema`)
+### 7.8 Settings
 
-`runs_dir` (string), `mode` (`auto`, `demo` or `live`), `ai_process_names` (list), `agent_accounts` (list), `expected_services` (list), `provider_allowlist` (list), `unattended_hours` (string), `redact_by_default` (bool, default true), `allow_reveal` (bool). Values live in the Hermes plugin settings. Defaults are neutral, and nothing is specific to one machine.
+Declared through `config_schema`: `runs_dir`, `mode` (`auto`, `demo`, `live`), `ai_process_names`, `agent_accounts`, `expected_services`, `provider_allowlist`, `unattended_hours`, `redact_by_default` (default true), `allow_reveal`, `retention_days` (default 14). Defaults are neutral and name no particular machine.
 
-## 7. Constraints
+### 7.9 Interface inventory and priority tiers
+
+Build in tier order. A time squeeze drops the lowest tier rather than leaving everything unfinished.
+
+**Tier A, must ship**
+
+| # | Element | Content |
+|---|---|---|
+| 1 | Header | Run selector, mode badge, redaction toggle, last collection time |
+| 2 | Summary | The ten totals, as a figure grid |
+| 3 | Coverage | Twenty-four hourly slots, gaps shown as gaps |
+| 4 | Findings | Detections with severity pill, confidence, ATT&CK block, detail, evidence and recommendation |
+| 5 | Beacons | Process, destination, count, mean interval, jitter, confidence, assessment |
+| 6 | Novel destinations | Destination, rarity, contacts, processes, prior runs seen |
+| 7 | Agents | AI tooling and non-standard accounts, with privilege note and verdict |
+| 8 | Integrity | Run hashes, chain position, and a verification control |
+| 9 | Caveats | The eight notes below, in full |
+
+The caveat notes, carried over because they are what separates a serious instrument from one that overclaims: remote content stays encrypted; local agent content is obtainable; more metadata exists than is collected; volume comes from connection tracking; collection is hourly; collection follows the desktop session; container attribution is unverified; detection confidence is not certainty.
+
+**Tier B, should ship**
+
+| # | Element | Content |
+|---|---|---|
+| 10 | Connections chart | Inline SVG, last 24 runs, split by AI traffic, other traffic and denied |
+| 11 | Events | The ranked connection table, capped at 120 rows |
+| 12 | Aggregates | Five sub-tables: destinations, processes, accounts, ports, addresses |
+
+**Tier C, nice to have**
+
+| # | Element | Content |
+|---|---|---|
+| 13 | Volume | Bytes sent and received per flow, with a per-row assessment |
+| 14 | Daemon state | The node row as the collector reports it |
+| 15 | Rules | Rules in force at collection time |
+| 16 | Sockets | Live sockets, where socket monitoring is enabled |
+| 17 | Export | CSV of the current run, generated in the browser from data already loaded |
+
+### 7.10 Front-end conventions
+
+These three decisions are binding and were taken deliberately.
+
+**Elements, not markup strings.** Every panel is built with `SDK.React.createElement`, conventionally aliased to a short helper. React escapes automatically, which removes an entire class of injection risk arising from process names and host names flowing into the page. Raw markup injection is prohibited wherever record data is rendered. The sole exception is the chart, which is assembled from numeric values only and contains no text drawn from a record.
+
+**A bounded data layer.** The tab requests run summaries and a single record, never the whole history. The chart is served by its own compact series route.
+
+**Theme variables.** Colour, type and spacing come from the dashboard theme. No web font is loaded. SDK components provide the panel chrome so the tab looks native rather than transplanted, with custom markup inside each panel.
+
+## 8. Constraints
 
 | Type | Constraint |
 |---|---|
-| Time | The submission deadline is 22:00 UTC on 11 November 2026. The build window is about two days |
-| Technical | Dashboard plugins use the Hermes SDK components and a single pre-built IIFE bundle. The SDK lists no chart component, so charts are drawn as inline SVG. Routes mount once at startup, so route changes need a dashboard restart |
-| Catalogue | One YAML file in the catalogue pull request. Exact 40-character SHA pin. No self-updating code, no compiled files or bytecode, no runtime overrides of core, truthful `requires_hermes`, and capabilities that match what is registered |
-| Disclosure | Reads outside the plugin's own data, background processes and network calls must be disclosed in the pull request and README. Telemetry must be opt-in. Version 1 has none |
-| Compliance | No personal data and no traceable identifiers in any published artefact |
-| Platform | Linux only. Real data requires OpenSnitch. Demo mode runs anywhere Hermes runs |
+| Time | The deadline is 22:00 UTC on Wednesday 11 November 2026, which is 09:00 on Thursday 12 November in the owner's timezone. Fifty-nine hours remained when this version was approved |
+| Technical | Dashboard plugins use the SDK components and a single pre-built IIFE bundle. The SDK ships no chart component, so charts are inline SVG. Routes mount once at startup, so a route change requires a dashboard restart |
+| Catalogue | One YAML file in the pull request. An exact forty-character SHA pin. No self-updating code, no compiled artefact or bytecode, no runtime override of core, a truthful `requires_hermes`, and declared capabilities that match what is registered |
+| Disclosure | Reads outside the plugin's own data, background processes and network calls are disclosed in the pull request and the README. Telemetry must be opt-in. Version 1 has none |
+| Compliance | No personal data and no traceable identifier in any published artefact |
+| Platform | Linux only. Live data requires OpenSnitch. Demonstration mode runs wherever Hermes runs |
 
-## 8. Plan
+## 9. Build plan
 
-### 8.1 Build sequence and priorities
+### 9.1 Sequence
 
-| Priority | Item |
+| Priority | Work |
 |---|---|
-| P0 | Repository scaffolding and manifest. Run record schema and canonical hashing. Analysis engine with tests. Synthetic demo generator with range-checking test. `plugin_api.py`. Dashboard tab with overview, coverage, detections, beacons, novel destinations, agents and chain verification. Redaction. `hermes plugins validate` passing |
-| P1 | Reference collector for the OpenSnitch statistics database, with a systemd user timer template |
-| P2 | Volume panel, ranked connection table, banner image and architecture diagram polish |
+| P0 | Schema module and validator. Canonical hashing and chain verification. Analysis engine with unit tests. Synthetic generator producing at least 24 runs, two full and the remainder trimmed. Range-checking fixture test. `plugin.yaml`, `__init__.py`, `dashboard/manifest.json` and an early validation run. `plugin_api.py`. Tier A panels. Redaction |
+| P1 | Tier B panels. Reference collector and unit templates |
+| P2 | Tier C panels. Banner refinements, screenshots, architecture diagram |
 
-Cut order if time runs short: volume panel first, then the connection table, then the collector, which would ship as a documented experimental script. Never cut: redaction, demo mode, chain verification, disclosure and tests.
+Run `hermes plugins validate . --install-deps` as soon as the manifest and `__init__.py` exist, before any interface work. Risks R1 and R2 are resolved by that first run rather than by assumption.
 
-### 8.2 Timeline (UTC)
+Never cut: redaction, demonstration mode, chain verification, the caveat notes, disclosure and tests.
+
+### 9.2 Timeline
 
 | When | Milestone |
 |---|---|
-| Mon 9 Nov, evening | PRD signed off. Scaffolding committed to the private repository |
-| Tue 10 Nov | Engine, schema, demo generator and tests. Backend and manifest, with an early run of `hermes plugins validate`. Dashboard panels |
-| Tue 10 Nov, evening | Collector if time allows. Screenshots from demo data. History-wide scan. Repository made public after the gate in section 10 |
-| Wed 11 Nov, by 12:00 | Release tag and pull request opened |
-| Wed 11 Nov, by 15:00 | Video recorded and posted on X tagging @NousResearch |
-| Wed 11 Nov, by 18:00 | Form submitted. This leaves four hours before the cut-off |
+| Tuesday 10 November, morning | Schema, hashing, engine and tests. First validation run |
+| Tuesday, afternoon | Generator and fixtures. Backend routes. Tier A panels |
+| Tuesday, evening | Tier B panels. Collector if time allows |
+| Wednesday, morning | Tier C panels. Screenshots from demonstration data. History-wide scan. Repository made public once the gate in 11.3 passes |
+| Wednesday, by 12:00 UTC | Release tagged, catalogue pull request opened |
+| Wednesday, by 15:00 UTC | Video recorded and posted, tagging the organisers |
+| Wednesday, by 18:00 UTC | Form submitted, leaving four hours of margin |
 
-## 9. Test and validation strategy
+## 10. Test strategy
 
-- Unit tests for each analysis rule, including boundary values (7 and 8 contacts, 9.9 and 10 per cent jitter, 24.9 and 25 per cent, exactly 20 seconds and 2 hours).
-- Integrity tests: round trip, single-field edit, deleted run, reordered runs.
-- Fixture test: every address, hardware address and domain in `fixtures/` lies within the documentation ranges.
-- API tests: malformed identifiers rejected, response limits enforced, no route accepts a path.
-- Validation: `hermes plugins validate . --install-deps` and `hermes plugins doctor . --ci`, run in CI and locally against the exact commit to be pinned.
-- Manual: install into a clean Hermes profile, open the tab in demo mode, then in live mode with a collected run.
+- Unit tests for every analysis rule, including boundary values: seven and eight contacts, 9.9 and 10 per cent jitter, 24.9 and 25 per cent, exactly 20 seconds and exactly 2 hours.
+- Integrity tests: round trip, single-field edit, deleted run, reordered runs, and a trimmed record in the chain.
+- Schema tests: every fixture validates; a record missing a mandatory detection field is rejected.
+- Fixture range test: every address, hardware address and name lies inside the documentation ranges.
+- API tests: a malformed identifier is rejected, response bounds hold, and no route accepts a path.
+- Interface test: the tab renders against a fixture set in both themes, and a malformed record does not prevent other panels from rendering.
+- Validation: `hermes plugins validate . --install-deps` and `hermes plugins doctor . --ci`, locally and in continuous integration, against the exact commit to be pinned.
+- Manual: install into a clean Hermes profile, view demonstration mode, then live mode with a collected run.
 
-## 10. Catalogue submission and publication gate
+## 11. Catalogue submission
 
-### 10.1 Draft catalogue entry
+### 11.1 Draft entry
 
 ```yaml
 name: hermes-snitchboard
 title: Snitchboard
 repo: https://github.com/NeumannTechTips/hermes-snitchboard
-sha: <40-character commit, set at release>
-description: "Dashboard-only: ..."   # includes the disclosure, see 10.2
+sha: <forty characters, set at release>
+description: "Dashboard-only: ..."   # carries the disclosure in 11.2
 maintainer: NeumannTechTips
 tier: community
-category: general                    # see open question OQ1
+category: general
 requires_hermes: ">=0.23.0"
 version: "0.1.0"
 docs_url: https://github.com/NeumannTechTips/hermes-snitchboard#readme
 image: <2:1 banner on raw.githubusercontent.com, pinned to the commit>
-screenshots: [<up to six synthetic-data screenshots, pinned to the commit>]
+screenshots: [<up to six, from synthetic data, pinned to the commit>]
 platforms: [linux]
 capabilities:
   provides_tools: []
@@ -249,51 +367,55 @@ capabilities:
   requires_env: []
 ```
 
-### 10.2 Disclosure (to appear in the entry, the pull request and the README)
+### 11.2 Disclosure
 
-The plugin reads run-record files from one configured directory, read-only. It makes no network calls, runs no background processes, stores no credentials and sends no telemetry. The optional collector is a separate script that the user runs under their own account. It reads the OpenSnitch statistics database read-only and writes run records. The collector is not loaded by Hermes.
+The plugin reads run-record files from one configured directory, read-only. It makes no network call, runs no background process, stores no credential and sends no telemetry. The optional collector is a separate script the owner runs under their own account; it reads the OpenSnitch statistics database read-only and writes run records. Hermes does not load the collector.
 
-### 10.3 Gate before the repository is made public
+### 11.3 Publication gate
 
-1. Pattern scan of the whole Git history for IPv4, IPv6 and hardware address formats, host and account names, home paths and the owner's real name. Any hit means the history is rewritten before publication.
-2. Fixture range test passing.
-3. Continuous integration logs reviewed, because workflow logs become public with the repository.
-4. All screenshots and the banner reviewed against the no-personal-data rule.
-5. Push rulesets and branch protection re-enabled after the switch, because GitHub disables push rulesets when a repository becomes public.
+Every item must pass before the repository is made public.
 
-## 11. Risks
+1. Pattern scan of the entire git history for IPv4, IPv6 and hardware address formats, host and account names, home paths and the owner's real name. Any hit means the history is rewritten before publication.
+2. Fixture range test passes.
+3. Continuous integration logs reviewed, since workflow logs become public with the repository.
+4. Every screenshot and the banner reviewed against the no-personal-data rule.
+5. Branch protection and push rulesets re-enabled afterwards, because GitHub disables push rulesets when a repository becomes public.
+
+## 12. Risks
 
 | ID | Risk | Mitigation |
 |---|---|---|
-| R1 | The validator may expect `__init__.py` beside `plugin.yaml` even for a dashboard-only plugin, while the submission guide lists `dashboard/manifest.json` as an entrypoint | Include a minimal `__init__.py` whose `register(ctx)` registers nothing, and run the validator on day one |
-| R2 | The documented way to read plugin settings may differ between native code and dashboard backends | Use the documented read-only configuration helper, with a fallback to a settings file in the plugin data directory |
-| R3 | Routes mount once at startup, so changes during testing need a dashboard restart | Include the restart in the test procedure |
-| R4 | Time: two days for engine, backend, interface, documentation and video | Priorities and cut order in section 8 |
-| R5 | A personal identifier slips into history or an image | Strict `.gitignore`, fixture range test, history scan and manual review before publication |
-| R6 | OpenSnitch database layout varies between versions | Collector checks the schema first and records `no_data` or `partial` with an explanation instead of guessing |
-| R7 | Reviewers see overlap with application-layer network tooling | The README states the difference plainly: application tooling records what Hermes sent, Snitchboard records what the operating system saw leave |
+| R1 | The validator may require `__init__.py` beside `plugin.yaml` even for a dashboard-only plugin | Ship a minimal `register(ctx)` that registers nothing, and validate on the first morning |
+| R2 | The documented way to read settings may differ between native code and a dashboard backend | Use the documented read-only helper, falling back to a settings file in the plugin data directory |
+| R3 | Routes mount once at startup, so changes during testing need a restart | The restart is part of the test procedure |
+| R4 | Seventeen interface elements is a large surface for the time available | Tier order in 9.1, with an explicit list of what is never cut |
+| R5 | An identifier slips into history or an image | Strict ignore rules, fixture range test, history scan and manual review at the gate |
+| R6 | OpenSnitch database layout varies between versions | The collector checks the schema first and records `no_data` or `partial` with an explanation rather than guessing |
+| R7 | A reviewer sees overlap with application-layer tooling such as privacy-xray | The README states the distinction plainly: application tooling records what the agent sent, Snitchboard records what the operating system observed leaving |
+| R8 | The project avatar is the Nous Research character mark, which a reviewer could read as implying endorsement | The unofficial notice sits directly beneath the header, and the README carries an explicit credit and non-endorsement statement. Replacing the avatar is a one-line change if a reviewer objects |
 
-## 12. Open questions
+## 13. Open questions
 
-| ID | Question | Default if unanswered |
+| ID | Question | Default |
 |---|---|---|
-| OQ1 | Is `general` or `web` the better catalogue category for a dashboard-only plugin? | `general`, the category used by an existing dashboard-only entry |
-| OQ2 | Which configuration helper is intended for `plugin_api.py`? | Documented read-only helper, with file fallback |
-| OQ3 | What is OpenSnitch's documented default database location? | No default asserted. The collector requires an explicit path |
-| OQ4 | Does the validator accept a dashboard-only plugin without `__init__.py`? | Include a no-op `register(ctx)` |
-| OQ5 | Are the ATT&CK names for the remaining identifiers current? | Verified against the ATT&CK site during the release checklist |
+| OQ1 | Is `general` or `web` the better catalogue category for a dashboard-only plugin? | `general`, matching an existing dashboard-only entry |
+| OQ2 | Which configuration helper is intended for a dashboard backend? | The documented read-only helper, with a file fallback |
+| OQ3 | What is the documented default location of the OpenSnitch database? | None asserted. The collector requires an explicit path |
+| OQ4 | Does the validator accept a dashboard-only plugin without `__init__.py`? | Ship the no-op `register(ctx)` regardless |
+| OQ5 | Are the ATT&CK names for the remaining identifiers current? | Verified during the release checklist |
 
-## 13. Assumptions to confirm at sign-off
+## 14. Decisions recorded
 
-| ID | Assumption |
-|---|---|
-| A1 | Licence is MIT OR Apache-2.0, with NeumannTechTips as copyright holder |
-| A2 | T1571 is added to the technique mapping |
-| A3 | In a split-account setup, the collector runs under the owner's account and writes to a shared directory that the Hermes account can read |
-| A4 | The Hermes dashboard runs under the account where the plugin is installed |
-| A5 | The plugin is tested on Hermes v0.23.0 and declares `>=0.23.0` |
+| ID | Decision | Date |
+|---|---|---|
+| D1 | Licence is MIT OR Apache-2.0, with NeumannTechTips as the copyright holder | 9 November 2026 |
+| D2 | T1571 is added to the technique mapping, alongside T1048 for the exfiltration reading | 9 November 2026 |
+| D3 | The viewer and the collector are separate components. The plugin reads a directory of records and never opens the firewall database. This supersedes the earlier assumption about cross-account file access, which no longer applies | 9 November 2026 |
+| D4 | Full-fidelity port approved, built in the three tiers set out in 7.9 | 9 November 2026 |
+| D5 | Interface built from React elements rather than markup strings, with a bounded data layer and dashboard theme variables | 9 November 2026 |
+| D6 | The project avatar is used, with the non-endorsement statement in the README | 9 November 2026 |
 
-## 14. Sources
+## 15. Sources
 
 - Hermes Agent, extending the dashboard: https://hermes-agent.nousresearch.com/docs/user-guide/features/extending-the-dashboard
 - Hermes Agent, plugin developer guide: https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
@@ -301,14 +423,15 @@ The plugin reads run-record files from one configured directory, read-only. It m
 - Plugin catalogue entry schema: https://github.com/NousResearch/hermes-agent/blob/main/plugin-catalog/README.md
 - OpenSnitch: https://github.com/evilsocket/opensnitch
 - MITRE ATT&CK, T1571 Non-Standard Port: https://attack.mitre.org/techniques/T1571/
-- RFC 5737, documentation IPv4 blocks: https://www.rfc-editor.org/rfc/rfc5737
-- RFC 3849, documentation IPv6 prefix: https://www.rfc-editor.org/rfc/rfc3849
+- RFC 5737, IPv4 blocks reserved for documentation: https://www.rfc-editor.org/rfc/rfc5737
+- RFC 3849, IPv6 prefix reserved for documentation: https://www.rfc-editor.org/rfc/rfc3849
 - RFC 2606, reserved DNS names: https://www.rfc-editor.org/rfc/rfc2606
-- RFC 7042, documentation hardware address values (replaced by RFC 9542): https://www.rfc-editor.org/rfc/rfc7042
+- RFC 7042, documentation hardware address values, replaced by RFC 9542: https://www.rfc-editor.org/rfc/rfc7042
 - GitHub, setting repository visibility: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/setting-repository-visibility
 
-## 15. Change record
+## 16. Change record
 
 | Date | Version | Change |
 |---|---|---|
 | 9 November 2026 | 0.1 | Draft created for sign-off |
+| 9 November 2026 | 1.0 | Approved. Scope widened to a full-fidelity port with seventeen interface elements in three tiers. Section 5 added, recording schema inconsistency and the trimming effect on novelty. Schema in 7.3 made strict, with a declared trimmed form. Front-end conventions added at 7.10. Routes extended with pagination and a series endpoint. Decisions D1 to D6 recorded. The earlier assumptions about cross-account access are closed by D3 |

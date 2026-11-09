@@ -56,3 +56,6 @@ node_modules/
 # Local scratch output
 scratch/
 tmp/
+.scan-words
+.scan-words
+.scan-words

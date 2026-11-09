@@ -55,6 +55,15 @@ RE_HOME = re.compile(r"/home/[a-z_][a-z0-9_-]*", re.I)
 # passed, because a silent pass on an empty list is worse than no check at all.
 WORD_LIST = ".scan-words"
 
+# Home paths are a finding only when the account name could belong to a real
+# person or a real host. Invented accounts are what the fixtures are supposed to
+# contain, so they are allowed here. Extend this set rather than dropping the
+# check, and keep every entry obviously fictitious.
+SYNTHETIC_HOME_USERS = {
+    "demo", "demo-user", "demouser", "example", "example-user",
+    "test", "test-user", "testuser", "user", "someone", "alice", "bob",
+}
+
 # Files expected to contain patterns, reported separately rather than as
 # findings. Matched on suffix so the invocation directory does not matter.
 EXPECTED_PATTERN_FILES = ("scan_history.py", "test_fixtures.py")
@@ -102,8 +111,9 @@ def findings_in(text: str, words: list[str]) -> list[str]:
             out.append(f"e-mail address: {m}")
 
     for m in set(RE_HOME.findall(text)):
-        if m.lower() not in ("/home/demo", "/home/user"):
-            out.append(f"home path: {m}")
+        user = m.rsplit("/", 1)[-1].lower()
+        if user not in SYNTHETIC_HOME_USERS:
+            out.append(f"home path for a non-synthetic account: {m}")
 
     low = text.lower()
     for w in words:
@@ -174,6 +184,9 @@ def report(title: str, hits: dict[str, list[str]], quiet: bool) -> int:
             print(f"    {where}")
             for i in sorted(set(items)):
                 print(f"      - {i}")
+        if any("non-synthetic account" in i for v in hits.values() for i in v):
+            print(f"    note: accounts treated as fictitious are "
+                  f"{', '.join(sorted(SYNTHETIC_HOME_USERS))}")
     return total
 
 

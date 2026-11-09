@@ -1,22 +1,23 @@
 <div align="center">
 
-<img src="docs/assets/banner.svg"
+<img src="docs/assets/banner.png"
      alt="Hermes Snitchboard: tamper-evident outbound connection audit for Hermes Agent, shown as a sample connection log with allow, beacon, novel and deny entries"
-     width="860">
+     width="1200">
 
 **A dashboard plugin for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that turns
 [OpenSnitch](https://github.com/evilsocket/opensnitch) connection evidence into a plain-language,
 tamper-evident view of what your machine really connected to.**
 
-[![Status](https://img.shields.io/badge/status-pre--alpha-critical)](#-project-status)
+[![Status](https://img.shields.io/badge/status-alpha-orange)](#-project-status)
 [![Hermes Agent](https://img.shields.io/badge/hermes--agent-%3E%3D0.23.0-1F5FBF)](#-requirements)
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)](#-requirements)
 [![Runtime dependencies](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)](#-conventions)
 [![Telemetry](https://img.shields.io/badge/telemetry-none-00897B)](#-what-it-will-not-do)
+[![Tests](https://img.shields.io/badge/tests-unittest-brightgreen)](#-development)
 [![Commits](https://img.shields.io/badge/commits-signed-brightgreen)](#-conventions)
 [![Licence](https://img.shields.io/badge/licence-MIT%20OR%20Apache--2.0-blue)](#-licence)
 
-Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot; Requirements version 1.0 &middot; Reviewed: November 2026
+Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot; Requirements version 1.2 &middot; Reviewed: November 2026
 
 `#HermesAgent` `#OpenSnitch` `#MITREATTACK` `#EgressMonitoring` `#AgenticAI` `#AIGovernance` `#Linux` `#SecurityTooling` `#TamperEvident` `#Observability` `#ZeroTelemetry` `#Python`
 
@@ -34,11 +35,14 @@ Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot;
 - [Why this exists](#-why-this-exists)
 - [How it works](#-how-it-works)
 - [What you will see](#-what-you-will-see)
+- [Screenshots](#-screenshots)
 - [What it will not do](#-what-it-will-not-do)
-- [Repository map](#-repository-map)
-- [Documentation](#-documentation)
 - [Requirements](#-requirements)
 - [Installation](#-installation)
+- [Settings](#-settings)
+- [Repository map](#-repository-map)
+- [Development](#-development)
+- [Documentation](#-documentation)
 - [Roadmap](#-roadmap)
 - [Conventions](#-conventions)
 - [Contributing](#-contributing)
@@ -50,9 +54,9 @@ Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot;
 
 ## 🚦 Project status
 
-**Pre-alpha. There is nothing to install yet.** The requirements are written and signed off, and the build has not started.
+**Alpha. The viewer is built, deployed and verified panel by panel in a running Hermes dashboard.** Every interface described below exists and renders; demonstration mode needs nothing beyond Hermes itself.
 
-> 💡 **What this README is.** It describes intended behaviour rather than shipped behaviour. Each section will be revised as its part is built and tested, and the status badge changes only when a release is tagged.
+> 💡 **What alpha means here.** The analysis rules, the record schema and the integrity chain are settled and covered by tests. What has not happened yet is exposure to other people's machines, other Linux distributions and histories larger than a few dozen runs. Treat findings as a reason to look, never as a verdict.
 
 ---
 
@@ -94,15 +98,35 @@ Until you have collected real runs, the tab shows clearly labelled demonstration
 | Panel | Content |
 |---|---|
 | 📊 **Summary** | Connections, denials, unique processes and destinations, AI traffic, unattributed traffic |
-| ⏱️ **Coverage** | One slot per hour, with gaps shown as gaps |
+| ⏱️ **Coverage** | One slot per hour. An hour with no collection is drawn as a gap, never as a quiet hour |
 | 🛡️ **Findings** | Severity, confidence, ATT&CK technique and tactic, the literal records behind each finding, and a concrete next step |
-| 📡 **Beacons** | Regular-interval destinations, each with both the benign and the malicious explanation |
-| ✨ **Novel destinations** | Addresses never seen before, ranked by rarity |
+| 📡 **Beacons** | Regular-interval destinations, each carrying both the benign and the malicious explanation |
+| ✨ **Novel destinations** | Addresses not seen in earlier runs, ranked by rarity |
 | 🤖 **Agents** | Activity by AI process and by configured account |
-| 📈 **Chart** | Connections per collection across the retained window |
-| 🔗 **Integrity** | Run hashes, chain position, and a control that recomputes every link |
+| 📈 **Chart** | One column per stored run, with a run that collected nothing marked rather than drawn as zero |
+| 📋 **Events** | The connection rows the record kept, in the order it ranks them |
+| 🧮 **Aggregates** | Destinations, processes, accounts, ports and protocols, each against its cap |
+| 💾 **Volume** | Bytes where the kernel's connection tracking measured them, reported as unavailable where it did not |
+| 🔥 **Daemon state** | What the firewall reported about itself when the run was collected |
+| 📜 **Rules in force** | The rules present at collection time, with denials marked |
+| 🔌 **Sockets** | Open sockets as the firewall saw them |
+| 🔗 **Integrity** | Run digests, chain position, and a control that recomputes every link |
+| ⚠️ **Caveats** | What the evidence cannot tell you, stated on the page rather than buried in documentation |
 
-Addresses and names are masked by default, with a deliberate control to reveal them.
+Addresses, host names, hardware addresses, home directories and process arguments are masked by default. A deliberate control reveals them, and that control can be switched off entirely.
+
+---
+
+## 📸 Screenshots
+
+Taken from demonstration mode, so every address and name in them is synthetic.
+
+| | |
+|---|---|
+| <img src="docs/screenshots/01-summary-and-coverage.png" alt="Summary tiles and the hourly coverage strip, with two hours shown as gaps" width="420"> | <img src="docs/screenshots/02-findings.png" alt="Findings with severity, ATT&CK technique and tactic, evidence lines and a recommendation" width="420"> |
+| **Summary and coverage.** Missing hours read as gaps. | **Findings.** Technique, evidence, one next step. |
+| <img src="docs/screenshots/03-beacons-and-novel.png" alt="Beacons table with both readings per row, and novel destinations ranked by rarity" width="420"> | <img src="docs/screenshots/05-integrity.png" alt="Integrity panel reporting the chain intact across the stored runs" width="420"> |
+| **Beacons and novelty.** Both readings, every time. | **Integrity.** Recomputed on request. |
 
 ---
 
@@ -116,34 +140,10 @@ Addresses and names are masked by default, with a deliberate control to reveal t
 | 🔐 Never decrypts or describes traffic content | Connections are events with byte counts where measured, never payloads |
 | 📴 Makes no network call and sends no telemetry | The plugin opens no socket and loads no external font, script or image |
 | 🗝️ Reads no credential store | No `.env`, no `auth.json`, no browser profile, no key store |
-| ⚖️ Does not prove what the network did | The hash chain makes alteration detectable. Someone able to rewrite every record could recompute it |
+| 🧾 Never writes to disk | The half that runs inside Hermes serves seven GET routes and nothing else |
+| ⚖️ Does not prove what the network did | The chain makes alteration detectable. Someone able to rewrite every record could recompute it |
 
----
-
-## 🗺️ Repository map
-
-| Path | Contents | State |
-|---|---|---|
-| `docs` | Requirements, banner and its generator | ✅ Populated |
-| `snitchboard` | Analysis engine: schema, canonical hashing, analysis, redaction | 🚧 Not started |
-| `dashboard` | Manifest, read-only API routes, and the tab bundle | 🚧 Not started |
-| `collector` | Reference collector and its systemd user timer templates | 🚧 Not started |
-| `fixtures` | Synthetic demonstration records, documentation ranges only | 🚧 Not started |
-| `tools` | Demonstration generator and repository scan scripts | 🚧 Not started |
-| `tests` | Unit tests for every analysis rule and the integrity chain | 🚧 Not started |
-| `.github/workflows` | Tests, plugin validation, history and fixture scans | 🚧 Not started |
-
----
-
-## 📚 Documentation
-
-| Document | What it gives you |
-|---|---|
-| [`docs/HSB-PRD-001-Product-Requirements.md`](docs/HSB-PRD-001-Product-Requirements.md) | Problem, success criteria, scope, design, analysis rules, security and privacy requirements, build plan, risks and the decisions taken |
-
-A reference architecture diagram is drafted and will be added once it is finalised.
-
-> ⚠️ **The requirements govern.** When a decision changes, revise the requirements document first. Code follows from it, never the reverse.
+> ⚠️ **How far the integrity claim reaches.** The chain attests to the order of stored records and to the digest each full record held when it was sealed. A record that has since been trimmed keeps a shortened summary the chain does not cover, so that summary is a derived analysis aid rather than evidence. The integrity panel says how many links rest on sealed digests rather than leaving you to work it out.
 
 ---
 
@@ -160,7 +160,84 @@ A reference architecture diagram is drafted and will be added once it is finalis
 
 ## 📦 Installation
 
-Not yet available. Instructions will be added once the plugin passes `hermes plugins validate` and is submitted to the Hermes plugin catalogue.
+```bash
+hermes plugins install hermes-snitchboard
+hermes plugins enable hermes-snitchboard
+```
+
+> ⚠️ **Enabling is a separate step.** Hermes plugins are opt-in: an installed plugin that has not been enabled does not load, and its tab never appears. `hermes plugins list` shows the state of each one.
+
+Routes mount when the dashboard starts, so restart it once after enabling:
+
+```bash
+hermes dashboard --stop
+hermes dashboard
+```
+
+The tab appears in the sidebar under Plugins, and opens at `/hermes-snitchboard`.
+
+> 💡 **Nothing further is needed to look around.** With no run records present the tab loads demonstration data and labels every panel accordingly, so you can judge the thing before pointing it at your own machine.
+
+---
+
+## 🎛️ Settings
+
+Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configuration.
+
+| Setting | Default | Purpose |
+|---|---|---|
+| `runs_dir` | `""` | Directory of run records. Empty means the plugin data directory |
+| `mode` | `auto` | `auto`, `demo` or `live`. Automatic falls back to demonstration data when no records exist |
+| `ai_process_names` | `[]` | Process names to treat as AI tooling |
+| `agent_accounts` | `[]` | Accounts the agent runs under, by name or numeric uid |
+| `expected_services` | `[]` | Regular contact that should be labelled rather than flagged |
+| `provider_allowlist` | `[]` | Destinations agent accounts may reach without raising a high-severity finding |
+| `unattended_hours` | `[]` | Local hours, 0 to 23, when nobody is expected to be directing the agent |
+| `redact_by_default` | `true` | Mask addresses, host names, hardware addresses and process arguments |
+| `allow_reveal` | `true` | Offer the control that reveals masked values |
+| `retention_days` | `14` | Days a record stays in full form before it is trimmed, never deleted |
+| `telemetry_destinations` | `[]` | Third-party telemetry endpoints; AI tooling reaching one raises a medium finding |
+| `trimmed_max_bytes` | `8192` | Byte ceiling for a trimmed record, from 1024 to 204800 |
+
+> ⚠️ **Analysis thresholds are not yet settings.** Beacon windows and jitter bands, novelty depth, coverage tolerance, transfer thresholds and the detection and aggregate caps live in `snitchboard/config.py` and carry their defaults in this release. Only the twelve keys above reach the plugin from Hermes configuration; a threshold placed in the configuration file is rejected rather than quietly ignored. Exposing them is a v0.2.0 item.
+
+---
+
+## 🗺️ Repository map
+
+| Path | Contents | State |
+|---|---|---|
+| `snitchboard` | Analysis engine: schema, canonical hashing, chain, analysis, detection, severity, ATT&CK mapping, redaction, configuration | ✅ Built |
+| `dashboard` | Manifest, seven read-only API routes, and the tab bundle | ✅ Built |
+| `fixtures` | Synthetic demonstration records, documentation ranges only | ✅ Built |
+| `tests` | Unit tests covering every analysis rule, the chain, redaction, the routes and the bundle | ✅ Built |
+| `tools` | Demonstration generator and the history scanner that gates publication | ✅ Built |
+| `docs` | Requirements, release checklist, banner, screenshots | ✅ Built |
+| `collector` | Reference collector and its systemd user timer templates | 🚧 In progress |
+| `.github/workflows` | Tests, plugin validation, history and fixture scans | 🚧 Not started |
+
+---
+
+## 🧑‍💻 Development
+
+```bash
+python3 -m unittest discover -s tests -t .     # the whole suite, no network, no database
+python3 tools/gen_demo.py --help               # regenerate the demonstration fixtures
+python3 tools/scan_history.py                  # the publication gate, reads every blob ever committed
+```
+
+The scanner reads its word list from `.scan-words`, which is deliberately gitignored. Without that file it reports the word check as skipped rather than passing, so a missing list can never be mistaken for a clean result.
+
+---
+
+## 📚 Documentation
+
+| Document | What it gives you |
+|---|---|
+| [`docs/HSB-PRD-001-Product-Requirements.md`](docs/HSB-PRD-001-Product-Requirements.md) | Problem, success criteria, scope, design, analysis rules, security and privacy requirements, build plan, risks and the decisions taken |
+| [`docs/HSB-REL-001-Release-and-Recording-Checklist.md`](docs/HSB-REL-001-Release-and-Recording-Checklist.md) | Publication gate, capture discipline and the submission runbook |
+
+> ⚠️ **The requirements govern.** When a decision changes, revise the requirements document first. Code follows from it, never the reverse.
 
 ---
 
@@ -169,10 +246,11 @@ Not yet available. Instructions will be added once the plugin passes `hermes plu
 | Stage | Work | State |
 |---|---|---|
 | Requirements | Problem, scope, design, analysis rules and plan | ✅ Signed off |
-| Core | Run record schema, canonical hashing, analysis engine, tests | 🚧 Not started |
-| Dashboard | Backend routes and the tab, with demonstration data | 🚧 Not started |
-| Collector | Reference script for the OpenSnitch statistics database | 🚧 Not started |
-| Release | Validation, screenshots, catalogue submission | 🚧 Not started |
+| Core | Run record schema, canonical hashing, analysis engine, tests | ✅ Delivered |
+| Dashboard | Backend routes and the tab, with demonstration data | ✅ Delivered |
+| Collector | Reference script for the OpenSnitch statistics database | 🚧 In progress |
+| Release | Validation, screenshots, catalogue submission | 🚧 In progress |
+| v0.2.0 | Analysis thresholds as settings, continuous integration, wider platform testing | 📋 Planned |
 
 ---
 
@@ -187,6 +265,7 @@ Not yet available. Instructions will be added once the plugin passes `hermes plu
 | Runtime dependencies | None. Anything beyond the standard library needs a recorded decision |
 | Committed artefacts | Source only. No compiled binary, no bytecode, no minified bundle |
 | Demonstration data | Synthetic, inside the ranges reserved by [RFC 5737](https://www.rfc-editor.org/rfc/rfc5737), [RFC 3849](https://www.rfc-editor.org/rfc/rfc3849) and [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) |
+| Rendering | Record data reaches the page through React element construction, never through raw markup, because firewall-supplied names flow through that code |
 | Language | Professional British English throughout |
 
 > 🚫 **Never committed:** real capture data, OpenSnitch databases, run records from a live host, credentials, or any address, hostname or path belonging to a real machine. The [`.gitignore`](.gitignore) enforces these patterns as a safety net rather than as a substitute for checking `git status`.
@@ -195,7 +274,7 @@ Not yet available. Instructions will be added once the plugin passes `hermes plu
 
 ## 🤝 Contributing
 
-Guidelines will be published with the first tagged release. Until the core is built, an issue describing the problem you want solved is more useful than a pull request.
+Issues are welcome, particularly reports from distributions and OpenSnitch versions other than the one this was built against. For a change of behaviour, raise the problem first: the requirements document is revised before the code is, and a pull request that arrives ahead of that conversation is harder to accept than it looks.
 
 ---
 

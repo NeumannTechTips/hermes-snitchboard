@@ -230,6 +230,22 @@ class IdentifierPatterns(unittest.TestCase):
         self.record["window_start"] += "\n"
         self.problems("record.window_start: not an ISO 8601 timestamp")
 
+    def test_one_to_six_fractional_digits_parse_on_every_version(self):
+        # fromisoformat before Python 3.11 takes only three or six digits; the
+        # fraction is padded first, so every length the pattern admits parses.
+        for digits in range(1, 7):
+            fraction = "123456"[:digits]
+            micro = int(fraction.ljust(6, "0"))
+            for suffix in ("+01:00", "Z", "-05:30"):
+                stamp = f"2026-11-02T03:00:02.{fraction}{suffix}"
+                with self.subTest(stamp=stamp):
+                    parsed = schema.parse_timestamp(stamp)
+                    self.assertEqual(parsed.microsecond, micro)
+                    self.assertEqual(parsed.second, 2)
+                    self.assertIsNotNone(parsed.utcoffset())
+        with self.assertRaises(ValueError):
+            schema.parse_timestamp("2026-11-02T03:00:02.1234567+01:00")
+
     def test_timestamp_pattern_refuses_a_non_ascii_digit(self):
         bad = ARABIC_INDIC_TWO + self.STAMP[1:]
         self.assertIsNone(schema.TIMESTAMP_PATTERN.fullmatch(bad))

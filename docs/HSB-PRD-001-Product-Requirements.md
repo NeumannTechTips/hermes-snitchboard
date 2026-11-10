@@ -3,8 +3,8 @@
 | Field | Detail |
 |---|---|
 | Document ID | HSB-PRD-001 |
-| Version | 1.2, approved |
-| Date | 9 November 2026 |
+| Version | 1.3, approved |
+| Date | 10 November 2026 |
 | Owner | NeumannTechTips |
 | Repository | `NeumannTechTips/hermes-snitchboard` (private until the gate in section 11.3 passes) |
 | Plugin name | `hermes-snitchboard`, display title "Hermes Snitchboard" |
@@ -91,7 +91,7 @@ Two further points are favourable. The existing charts are already inline SVG dr
 | FR6 | Absence of collection is labelled as absence of collection and never presented as an all-clear. An hour with no run, or a run whose status is not `ok`, is shown as not covered |
 | FR7 | Volume is shown only where the record carries measured byte counts. Otherwise the panel states that volume is unavailable, and no figure is estimated |
 | FR8 | Demonstration mode is selected automatically when no real records are present, and is badged on the tab and in every panel that displays data |
-| FR9 | Addresses, host names, hardware addresses and process arguments are masked by default, with a deliberate control to reveal them |
+| FR9 | Addresses, host names, hardware addresses and process arguments are masked by default, with a deliberate control to reveal them. Home paths are masked because a path under `/home` names an account, but account names themselves are shown in clear in version 1. Masking them is a v0.2.0 item (D16) |
 | FR10 | Timestamps are displayed with their original UTC offset and are never relabelled as UTC |
 | FR11 | A record whose shape does not satisfy the schema is reported in the interface as a malformed record, and does not prevent other records from rendering |
 | FR12 | The caveat notes in section 7.9 are displayed in full and are not collapsible by default |
@@ -183,7 +183,7 @@ A record where `trimmed` is true carries `detections` in shortened form. Every m
 | `volume` | `{available: bool, note, rows: [{process, destination, sent_bytes, recv_bytes, flows, assessment}]}` |
 | `rows[]` | `{ts, action, src, dst, dport, proto, uid, pid, process, activity, is_ai, severity}` |
 | `aggregates` | `{daemon_uptime, total_connections, dropped, rules, procs[], hosts[], users[], ports[], addrs[], node{}, rules_detail[], sockets[]}`, where each aggregate list holds `{what, hits}` |
-| `aggregates.node` | `{addr, hostname, daemon_version, daemon_uptime, daemon_rules, cons, cons_dropped, version, status, last_connection}` |
+| `aggregates.node` | `{addr, hostname, daemon_version, daemon_uptime, daemon_rules, cons, cons_dropped, version, status, last_connection}`. `cons` and `cons_dropped` are the daemon's own lifetime counters as the daemon reported them at collection time, never counts taken from the window. Without daemon state they are 0 and `status` is `unknown` (D17). `aggregates.total_connections` and `aggregates.dropped` do not yet have a single meaning: a collected record carries the window's counts in them, and a demonstration record carries the daemon's lifetime counters (L8, D21) |
 | `aggregates.rules_detail[]` | `{name, enabled, precedence, action, duration, operator_type, operator_operand, operator_data, created}` |
 | `integrity` | `{content_sha256, prev_sha256, run_index}` |
 
@@ -297,6 +297,37 @@ These three decisions are binding and were taken deliberately.
 
 **Theme variables.** Colour, type and spacing come from the dashboard theme. No web font is loaded. SDK components provide the panel chrome so the tab looks native rather than transplanted, with custom markup inside each panel.
 
+### 7.11 Reference collector
+
+`collector/snitchboard_collect.py` reads one hour of the OpenSnitch statistics database and writes one sealed record. The owner runs it under their own account, by hand or from the systemd user timer in `collector/systemd/`. Hermes never runs it (D3, SP2). It uses the standard library only.
+
+**Access.** The database is opened as an SQLite URI with `mode=ro`, then `PRAGMA query_only` is set. The collector never writes, migrates or vacuums it. A busy database is retried with back-off and then recorded as `no_data`. `--db` has no default (OQ3).
+
+**Schema handling (R6).** The collector reads each table's columns before querying it.
+
+| Missing | Status |
+|---|---|
+| The `connections` table, or one of its required columns `time`, `action`, `protocol`, `dst_ip`, `dst_port` | `no_data` |
+| A column the collector reads (`node`, `src_ip`, `dst_host`, `uid`, `pid`, `process`), or one of the `nodes`, `rules` and `sockets` tables | `partial` |
+| A column it never reads (`src_port`, `process_args`, `process_cwd`, `rule`) | Unchanged. The absence is named in the note (D14) |
+
+An empty `sockets` table is normal and does not lower the status. The `hosts`, `procs`, `addrs`, `ports` and `users` tables are lifetime counters and are never read. Every aggregate is counted from the window's rows.
+
+**Writing.** Each record is written atomically with mode 0640. A runs directory the collector creates gets mode 0750. A lock file stops overlapping runs. Each window is collected at most once, and a window overlapping a stored one is refused. The chain continues from the newest record. Full records older than `retention_days` are trimmed, never deleted, and a trim that would drop destinations fails loudly (D9). `--settings` accepts only the settings in 7.8 (D19).
+
+**Limitations.**
+
+| ID | Limitation |
+|---|---|
+| L1 | OpenSnitch stores connection times without an offset. The collector reads them as its own machine's local time, so it must run under the same time zone as the GUI |
+| L2 | When clocks go back, a time without an offset cannot say which copy of the repeated hour it belongs to. Rows from that hour may be placed in the wrong window |
+| L3 | The GUI writes connections to the database, and only while it is running. An hour when it was closed is recorded as `no_data` and shown as a coverage gap. The GUI's own purge setting can remove rows before they are collected, with the same result |
+| L4 | The database carries no byte counts, so a collected record's volume is `{available: false}` and the panel reports volume as unavailable (FR7). Nothing is estimated (D20) |
+| L5 | Process arguments are never read or stored (D15) |
+| L6 | A rule's `operator_data` is capped at 512 characters, and the cut is marked in the field and stated in the note (D18) |
+| L7 | Account names are resolved from uids and stored in clear, and the tab does not mask them in version 1 (D16) |
+| L8 | `aggregates.total_connections` and `aggregates.dropped` carry two meanings. The collector leaves them out of the daemon state, so the engine counts the window. The demonstration generator supplies them, so they repeat the daemon's lifetime `cons` and `cons_dropped`. The daemon state panel shows both under the same labels, so a reader cannot tell which one a record holds. No detection, total or score reads either field. Giving them one meaning is a v0.2.0 item (D21) |
+
 ## 8. Constraints
 
 | Type | Constraint |
@@ -315,7 +346,7 @@ These three decisions are binding and were taken deliberately.
 | Priority | Work |
 |---|---|
 | P0 | Schema module and validator. Canonical hashing and chain verification. Analysis engine with unit tests. Synthetic generator producing at least 24 runs, two full and the remainder trimmed. Range-checking fixture test. `plugin.yaml`, `__init__.py`, `dashboard/manifest.json` and an early validation run. `plugin_api.py`. Tier A panels. Redaction |
-| P1 | Tier B panels. Reference collector and unit templates |
+| P1 | Tier B panels. Reference collector and unit templates. **Complete on 10 November 2026**: the collector is specified in 7.11 |
 | P2 | Tier C panels. Banner refinements, screenshots, architecture diagram |
 
 Run `hermes plugins validate . --install-deps` as soon as the manifest and `__init__.py` exist, before any interface work. Risks R1 and R2 are resolved by that first run rather than by assumption.
@@ -404,7 +435,7 @@ Every item must pass before the repository is made public.
 |---|---|---|
 | OQ1 | Is `general` or `web` the better catalogue category for a dashboard-only plugin? | `general`, matching an existing dashboard-only entry |
 | OQ2 | Which configuration helper is intended for a dashboard backend? | The documented read-only helper, with a file fallback |
-| OQ3 | What is the documented default location of the OpenSnitch database? | None asserted. The collector requires an explicit path |
+| OQ3 | What is the documented default location of the OpenSnitch database? | Open. None asserted, and the collector requires an explicit `--db`. The GUI source at commit `a1353848` keeps the database in memory (`file::memory:`) unless the operator configures a file. The shipped default for the file path sits in the GUI's configuration module, which has not been verified, so no default path can be stated |
 | OQ4 | Does the validator accept a dashboard-only plugin without `__init__.py`? | Ship the no-op `register(ctx)` regardless |
 | OQ5 | Are the ATT&CK names for the remaining identifiers current? | Verified during the release checklist |
 
@@ -424,6 +455,15 @@ Every item must pass before the repository is made public.
 | D10 | A known process means one that can be identified, since trimmed history keeps no process names. A run with status `no_data` is excluded from the novelty denominator | 9 November 2026 |
 | D11 | The plugin is called Hermes Snitchboard wherever a reader sees it, including the catalogue `title`. The short form is reserved for the directory and package name `hermes-snitchboard` | 10 November 2026 |
 | D12 | The connections chart draws one column per stored run, so an hour with no run at all is absent from it rather than shown as zero. The coverage strip is the panel that answers that question, and the chart caption says so | 10 November 2026 |
+| D13 | The collector has no default database path and requires `--db`, because OQ3 is unresolved | 10 November 2026 |
+| D14 | A run is `partial` only when something the collector reads is missing. A missing column it never reads is named in the note and does not lower the status, because coverage counts only `ok` runs and an older database would otherwise show every hour as uncovered | 10 November 2026 |
+| D15 | Process arguments are never read or stored, because they can carry secrets | 10 November 2026 |
+| D16 | Account names stay unmasked in version 1 and this is documented in the README and in FR9. Masking them is a v0.2.0 item | 10 November 2026 |
+| D17 | `aggregates.node.cons` and `cons_dropped` mean the daemon's lifetime counters only. Without daemon state they are 0, with `status` `unknown`. The engine's earlier fallback to window counts is removed | 10 November 2026 |
+| D18 | A rule's `operator_data` is capped at 512 characters with the cut marked, so one large rule cannot push records past the full-record cap and stop collection | 10 November 2026 |
+| D19 | The collector's `--settings` accepts only the settings in 7.8 and refuses analysis thresholds. The tab validates every record against the default caps, so a record built with other thresholds would show as malformed | 10 November 2026 |
+| D20 | A collected record carries `volume` with `available` false rather than omitting it, because `volume` is mandatory in the full form (7.3) | 10 November 2026 |
+| D21 | The two meanings of `aggregates.total_connections` and `aggregates.dropped` are recorded as limitation L8 and not fixed in version 1. A single meaning needs the engine to stop taking them from daemon state, the demonstration records and the screenshots taken from them to be regenerated, and the daemon state panel to be relabelled and checked again, and the deadline in section 8 leaves no time for that. Because no detection, total or score reads either field, the effect is confined to that panel. Fixing it is a v0.2.0 item, alongside account-name masking (D16) | 10 November 2026 |
 
 ## 15. Sources
 
@@ -444,6 +484,7 @@ Every item must pass before the repository is made public.
 | Date | Version | Change |
 |---|---|---|
 | 9 November 2026 | 0.1 | Draft created for sign-off |
+| 10 November 2026 | 1.3 | Resolutions from the fourth build session: P1 recorded as complete, the reference collector specified in a new section 7.11 with limitations L1 to L8, OQ3 kept open with its reason, FR9 qualified for account names, `aggregates.node.cons` given a single meaning, the two meanings of `aggregates.total_connections` and `aggregates.dropped` recorded as L8 and deferred to v0.2.0, and decisions D13 to D21 added |
 | 10 November 2026 | 1.2 | Resolutions from the third build session: the full name adopted everywhere a reader sees it, NFR4 aligned with the `trimmed_max_bytes` setting, the `/health` description corrected, the cap-lowering consequence recorded, and decisions D11 and D12 added |
 | 9 November 2026 | 1.1 | Resolutions from the first build session recorded: SC6 scoped to full records and chain order, `destinations` carried by both forms, trimmed detections shortened rather than reduced, `telemetry_destinations` and `trimmed_max_bytes` added to 7.8, the beacon ceiling limitation noted, and decisions D7 to D10 added |
 | 9 November 2026 | 1.0 | Approved. Scope widened to a full-fidelity port with seventeen interface elements in three tiers. Section 5 added, recording schema inconsistency and the trimming effect on novelty. Schema in 7.3 made strict, with a declared trimmed form. Front-end conventions added at 7.10. Routes extended with pagination and a series endpoint. Decisions D1 to D6 recorded. The earlier assumptions about cross-account access are closed by D3 |

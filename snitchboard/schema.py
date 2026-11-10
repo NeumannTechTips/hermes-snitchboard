@@ -134,9 +134,17 @@ def parse_timestamp(value):
     A naive timestamp is rejected rather than assumed to be UTC, because
     assuming would relabel a local time.
     """
-    if not isinstance(value, str) or not TIMESTAMP_PATTERN.fullmatch(value):
+    match = TIMESTAMP_PATTERN.fullmatch(value) if isinstance(value, str) else None
+    if not match:
         raise ValueError(f"not an ISO 8601 timestamp with an offset: {value!r}")
-    text = value[:-1] + "+00:00" if value.endswith("Z") else value
+    # The pattern admits one to six fractional digits, but fromisoformat
+    # before Python 3.11 accepts only three or six, so the fraction is padded
+    # to six digits first. Padding with zeros does not change the instant.
+    text = value
+    if match.group(1):
+        text = (value[: match.start(1)] + match.group(1).ljust(7, "0")
+                + value[match.end(1):])
+    text = text[:-1] + "+00:00" if text.endswith("Z") else text
     parsed = datetime.fromisoformat(text)
     if parsed.utcoffset() is None:
         raise ValueError(f"timestamp has no offset: {value!r}")

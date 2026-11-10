@@ -91,6 +91,12 @@ The component inside the dashboard reads run records from one configured directo
 
 Until you have collected real runs, the tab shows clearly labelled demonstration data, so every panel is visible without installing OpenSnitch.
 
+> ⚠️ **What the collector cannot see.** Three limits follow from how OpenSnitch stores connections. [`collector/README.md`](collector/README.md) covers them, and setup, in full.
+>
+> - **The time zone must match the GUI's.** OpenSnitch stores times without an offset, so the collector reads them as its own machine's local time. Run it under the same time zone as the OpenSnitch GUI.
+> - **The repeated hour at a clock change is ambiguous.** When clocks go back, a time without an offset cannot say which of the two copies of that hour it belongs to, so rows from that hour may be placed in the wrong window.
+> - **The GUI must be running.** The GUI, not the firewall daemon, writes connections to the database, and only while it is open. An hour when it was closed is recorded as `no_data` and shown as a coverage gap, never as a quiet hour.
+
 ---
 
 ## 🖥️ What you will see
@@ -106,7 +112,7 @@ Until you have collected real runs, the tab shows clearly labelled demonstration
 | 📈 **Chart** | One column per stored run, with a run that collected nothing marked rather than drawn as zero |
 | 📋 **Events** | The connection rows the record kept, in the order it ranks them |
 | 🧮 **Aggregates** | Destinations, processes, accounts, ports and protocols, each against its cap |
-| 💾 **Volume** | Bytes where the kernel's connection tracking measured them, reported as unavailable where it did not |
+| 💾 **Volume** | Bytes sent and received, only where the record carries byte counts. The reference collector supplies none, because the firewall database holds none, so with live data from that collector the panel reports volume as unavailable |
 | 🔥 **Daemon state** | What the firewall reported about itself when the run was collected |
 | 📜 **Rules in force** | The rules present at collection time, with denials marked |
 | 🔌 **Sockets** | Open sockets as the firewall saw them |
@@ -114,6 +120,8 @@ Until you have collected real runs, the tab shows clearly labelled demonstration
 | ⚠️ **Caveats** | What the evidence cannot tell you, stated on the page rather than buried in documentation |
 
 Addresses, host names, hardware addresses, home directories and process arguments are masked by default. A deliberate control reveals them, and that control can be switched off entirely.
+
+> ⚠️ **Account names are shown in clear.** Home paths are masked because a path under `/home` names an account, but in this release the account names themselves, in the agents panel and the accounts aggregate, are not masked. Records from the collector carry real account names, resolved from each connection's uid. Masking them is a v0.2.0 item.
 
 ---
 
@@ -137,7 +145,7 @@ Taken from demonstration mode, so every address and name in them is synthetic.
 | Limit | Why |
 |---|---|
 | 🔒 Never blocks, allows or changes anything on the host | It observes and reports. Enforcement belongs to the firewall |
-| 🔐 Never decrypts or describes traffic content | Connections are events with byte counts where measured, never payloads |
+| 🔐 Never decrypts or describes traffic content | Connections are events, with byte counts only where the record carries them, never payloads |
 | 📴 Makes no network call and sends no telemetry | The plugin opens no socket and loads no external font, script or image |
 | 🗝️ Reads no credential store | No `.env`, no `auth.json`, no browser profile, no key store |
 | 🧾 Never writes to disk | The half that runs inside Hermes serves seven GET routes and nothing else |
@@ -199,7 +207,7 @@ Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configura
 | `telemetry_destinations` | `[]` | Third-party telemetry endpoints; AI tooling reaching one raises a medium finding |
 | `trimmed_max_bytes` | `8192` | Byte ceiling for a trimmed record, from 1024 to 204800 |
 
-> ⚠️ **Analysis thresholds are not yet settings.** Beacon windows and jitter bands, novelty depth, coverage tolerance, transfer thresholds and the detection and aggregate caps live in `snitchboard/config.py` and carry their defaults in this release. Only the twelve keys above reach the plugin from Hermes configuration; a threshold placed in the configuration file is rejected rather than quietly ignored. Exposing them is a v0.2.0 item.
+> ⚠️ **Analysis thresholds are not yet settings.** Beacon windows and jitter bands, novelty depth, coverage tolerance, transfer thresholds and the detection and aggregate caps live in `snitchboard/config.py` and carry their defaults in this release. Only the twelve keys above reach the plugin from Hermes configuration. A threshold placed in the configuration file is dropped without any warning, and the default stays in force. The collector, by contrast, refuses a settings file that names one. Exposing them is a v0.2.0 item.
 
 ---
 
@@ -213,7 +221,7 @@ Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configura
 | `tests` | Unit tests covering every analysis rule, the chain, redaction, the routes and the bundle | ✅ Built |
 | `tools` | Demonstration generator and the history scanner that gates publication | ✅ Built |
 | `docs` | Requirements, release checklist, banner, screenshots | ✅ Built |
-| `collector` | Reference collector and its systemd user timer templates | 🚧 In progress |
+| `collector` | Reference collector and its systemd user timer templates | ✅ Built |
 | `.github/workflows` | Tests, plugin validation, history and fixture scans | 🚧 Not started |
 
 ---
@@ -248,9 +256,9 @@ The scanner reads its word list from `.scan-words`, which is deliberately gitign
 | Requirements | Problem, scope, design, analysis rules and plan | ✅ Signed off |
 | Core | Run record schema, canonical hashing, analysis engine, tests | ✅ Delivered |
 | Dashboard | Backend routes and the tab, with demonstration data | ✅ Delivered |
-| Collector | Reference script for the OpenSnitch statistics database | 🚧 In progress |
+| Collector | Reference script for the OpenSnitch statistics database | ✅ Delivered |
 | Release | Validation, screenshots, catalogue submission | 🚧 In progress |
-| v0.2.0 | Analysis thresholds as settings, continuous integration, wider platform testing | 📋 Planned |
+| v0.2.0 | Analysis thresholds as settings, masking of account names, continuous integration, wider platform testing | 📋 Planned |
 
 ---
 

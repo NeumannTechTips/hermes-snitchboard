@@ -1,0 +1,69 @@
+# Hermes Snitchboard collector: one run record per hour from the OpenSnitch
+# statistics database. A systemd USER unit. Never install it in system mode and
+# never run it as root: it must run under the account that owns the OpenSnitch
+# database and the runs directory.
+#
+# Install, as that account:
+#
+#   mkdir -p ~/.config/systemd/user
+#   cp snitchboard-collect.service snitchboard-collect.timer ~/.config/systemd/user/
+#   # edit the ExecStart= line below: every path in it is a placeholder
+#   systemctl --user daemon-reload
+#   systemctl --user start snitchboard-collect.service    # one run now, to check
+#   journalctl --user -u snitchboard-collect.service -n 20
+#   systemctl --user enable --now snitchboard-collect.timer
+#
+# A user manager stops when its owner logs out. To keep collecting while you are
+# logged out, enable lingering for your account once:
+#
+#   loginctl enable-linger
+#
+# Paths. There is no default database path: OpenSnitch keeps its database in
+# memory unless the GUI is told to write it to a file, and the collector
+# requires --db to name that file. %h expands to your home directory; "~" does
+# not expand in ExecStart=. A literal "%" in a path must be written as "%%".
+# The runs directory's parent must already exist; the collector creates only
+# the last component.
+#
+# See collector/README.md for what the collector reads, writes and reports.
+
+[Unit]
+Description=Hermes Snitchboard collector (one hourly run record from OpenSnitch)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/path/to/hermes-snitchboard/collector/snitchboard_collect.py --db /path/to/opensnitch.sqlite --runs-dir %h/snitchboard-runs
+
+# Optional: add --settings pointing at a JSON settings file, so that the
+# analysis, retention and trimming use the same values as the plugin, e.g.
+#   --settings %h/path/to/snitchboard-settings.json
+# Optional: add --quiet to keep the summary line out of the journal. Errors
+# still reach it. Neither line ever contains an address, host name or path.
+
+# Records are written 0640 and a new runs directory 0750; the umask keeps any
+# other file the process creates out of reach of other accounts as well.
+UMask=0027
+
+# Naive times in the OpenSnitch database are read as this machine's local time.
+# The user manager normally inherits the system timezone, which is what the GUI
+# uses too. Set TZ here only if the GUI runs under a different one, e.g.
+#Environment=TZ=UTC
+
+# A oneshot service has no start timeout by default. On timeout systemd sends
+# SIGTERM, which the collector handles by removing its lock before exiting.
+TimeoutStartSec=10min
+
+# Hardening that works in an unprivileged user manager.
+NoNewPrivileges=yes
+Nice=10
+
+# Deliberately left out. ProtectSystem=, ProtectHome=, PrivateTmp= and similar
+# sandboxing options need user namespaces when used in a user unit, and the
+# unit then fails to start on systems where unprivileged user namespaces are
+# disabled. Add them only after checking they work on your machine.
+#
+# The collector needs no network. RestrictAddressFamilies=AF_UNIX works in a
+# user unit on a reasonably recent systemd, but it would also stop user-name
+# lookups through a network directory service (LDAP and the like), so it is
+# left commented here:
+#RestrictAddressFamilies=AF_UNIX

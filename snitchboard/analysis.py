@@ -306,17 +306,31 @@ def _tally(values, cap):
 
 
 def aggregates(events, daemon, cfg):
+    """The aggregates block for one window.
+
+    node.cons and node.cons_dropped have one meaning: the daemon's own
+    lifetime counters, as the daemon reported them when the run was collected
+    (PRD section 7.3). They are never counted from the window. Without daemon
+    state they are 0 and node.status is "unknown", which is what marks the
+    block as not reported. The window's own counts are total_connections and
+    dropped.
+
+    Sockets are ranked by hits, then by text, before the cap is applied, so
+    which ones survive does not depend on the order the caller supplied.
+    """
     daemon = daemon or {}
     cap = cfg["aggregate_cap"]
     denied = sum(1 for e in events if e["action"] == "deny")
     last = max((e["ts"] for e in events), key=parse_timestamp, default="")
     node = {
         "addr": "", "hostname": "", "daemon_version": "", "daemon_uptime": 0,
-        "daemon_rules": 0, "cons": len(events), "cons_dropped": denied,
+        "daemon_rules": 0, "cons": 0, "cons_dropped": 0,
         "version": "", "status": "unknown", "last_connection": last,
     }
     node.update(daemon.get("node", {}))
     rules_detail = list(daemon.get("rules_detail", []))
+    sockets = sorted(daemon.get("sockets", []),
+                     key=lambda s: (-s["hits"], s["what"]))
     return {
         "daemon_uptime": daemon.get("daemon_uptime", node["daemon_uptime"]),
         "total_connections": daemon.get("total_connections", len(events)),
@@ -329,7 +343,7 @@ def aggregates(events, daemon, cfg):
         "addrs": _tally((e["dst_ip"] for e in events), CAPS["addrs"]),
         "node": node,
         "rules_detail": rules_detail,
-        "sockets": list(daemon.get("sockets", []))[:cap],
+        "sockets": sockets[:cap],
     }
 
 

@@ -1,0 +1,29 @@
+# Hermes Snitchboard collector timer: runs snitchboard-collect.service hourly.
+# A systemd USER unit; see the header of snitchboard-collect.service for
+# installation. Enable with:
+#
+#   systemctl --user enable --now snitchboard-collect.timer
+#   systemctl --user list-timers snitchboard-collect.timer
+#
+# Timing. Each run collects the hour that ended at the top of the current hour,
+# so firing two minutes past keeps every window aligned to whole hours and
+# gives the OpenSnitch GUI time to write the last rows of the hour. The
+# coverage panel tolerates 300 seconds of drift, well above AccuracySec.
+#
+# Missed runs. If the machine was suspended or switched off, Persistent=true
+# makes the timer fire once on resume or boot, and that run collects only the
+# latest completed hour. The hours before it show as gaps in the coverage
+# panel, never as quiet hours. They can be backfilled by hand, one hour at a
+# time, with --window-end (see collector/README.md), provided the GUI recorded
+# those hours and has not since purged them.
+
+[Unit]
+Description=Hourly Hermes Snitchboard collection
+
+[Timer]
+OnCalendar=*-*-* *:02:00
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

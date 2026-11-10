@@ -292,6 +292,31 @@ class RecordShape(unittest.TestCase):
         self.assertEqual(len(agg["hosts"]), 20)
         self.assertEqual(len(agg["addrs"]), 15)
 
+    def test_sockets_are_ranked_before_the_cap(self):
+        # The busiest sockets survive the cap whatever order the caller used.
+        sockets = [{"what": f"tcp 192.0.2.1:{40000 + i} -> 203.0.113.5:443",
+                    "hits": 1} for i in range(30)]
+        sockets.append({"what": "udp 192.0.2.1:41000 -> 192.0.2.53:53", "hits": 9})
+        sockets.append({"what": "tcp 192.0.2.1:39999 -> 203.0.113.9:443", "hits": 9})
+        agg = build([event()], daemon={"sockets": sockets})["aggregates"]
+        self.assertEqual(len(agg["sockets"]), 20)
+        self.assertEqual([s["hits"] for s in agg["sockets"][:2]], [9, 9])
+        self.assertEqual(agg["sockets"][0]["what"],
+                         "tcp 192.0.2.1:39999 -> 203.0.113.9:443")
+        reversed_agg = build([event()], daemon={"sockets": sockets[::-1]})["aggregates"]
+        self.assertEqual(agg["sockets"], reversed_agg["sockets"])
+
+    def test_node_counters_are_never_counted_from_the_window(self):
+        # node.cons and cons_dropped are the daemon's lifetime counters only.
+        events = [event(i) for i in range(5)] + [event(9, action="deny")]
+        agg = build(events)["aggregates"]
+        self.assertEqual((agg["node"]["cons"], agg["node"]["cons_dropped"]), (0, 0))
+        self.assertEqual(agg["node"]["status"], "unknown")
+        self.assertEqual((agg["total_connections"], agg["dropped"]), (6, 1))
+        node = {"cons": 5000, "cons_dropped": 40, "status": "online"}
+        agg = build(events, daemon={"node": node})["aggregates"]
+        self.assertEqual((agg["node"]["cons"], agg["node"]["cons_dropped"]), (5000, 40))
+
 
 if __name__ == "__main__":
     unittest.main()

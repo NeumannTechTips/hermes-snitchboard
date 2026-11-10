@@ -76,6 +76,12 @@ OpenSnitch already sees every outbound connection and the process behind it. Tha
 
 Two parts, kept apart on purpose.
 
+![Hermes Snitchboard reference architecture: a controls band governing a collection plane, an evidence store of hash-chained run records, and a presentation plane inside the Hermes dashboard](docs/assets/hermes-snitchboard-reference-architecture.png)
+
+*HSB-ARC-001. Seventeen numbered objects, coloured by classification rather than by type, so the view survives a greyscale print. Source: [`hermes-snitchboard-reference-architecture.drawio`](docs/assets/hermes-snitchboard-reference-architecture.drawio).*
+
+In short:
+
 ```
  OpenSnitch statistics database        read-only, your own account
             |

@@ -226,7 +226,7 @@ Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configura
 
 ---
 
-## 🧑‍💻 Development
+## 🧪 Development
 
 ```bash
 python3 -m unittest discover -s tests -t .     # the whole suite, no network, no database

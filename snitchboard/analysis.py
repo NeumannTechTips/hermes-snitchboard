@@ -312,8 +312,13 @@ def aggregates(events, daemon, cfg):
     lifetime counters, as the daemon reported them when the run was collected
     (PRD section 7.3). They are never counted from the window. Without daemon
     state they are 0 and node.status is "unknown", which is what marks the
-    block as not reported. The window's own counts are total_connections and
-    dropped.
+    block as not reported.
+
+    total_connections and dropped do not yet have a single meaning (PRD
+    limitation L8, D21). Where the daemon state supplies them, as the
+    demonstration generator does, they repeat the daemon's lifetime counters.
+    Where it does not, as with the reference collector, they are the window's
+    own counts of events and denied events.
 
     Sockets are ranked by hits, then by text, before the cap is applied, so
     which ones survive does not depend on the order the caller supplied.

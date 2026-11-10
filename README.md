@@ -258,7 +258,7 @@ The scanner reads its word list from `.scan-words`, which is deliberately gitign
 | Dashboard | Backend routes and the tab, with demonstration data | ✅ Delivered |
 | Collector | Reference script for the OpenSnitch statistics database | ✅ Delivered |
 | Release | Validation, screenshots, catalogue submission | 🚧 In progress |
-| v0.2.0 | Analysis thresholds as settings, masking of account names, continuous integration, wider platform testing | 📋 Planned |
+| v0.2.0 | Masking of account names, a single meaning for `aggregates.total_connections` and `aggregates.dropped`, analysis thresholds as settings, continuous integration, wider platform testing | 📋 Planned |
 
 ---
 

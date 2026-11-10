@@ -267,7 +267,7 @@ Build in tier order. A time squeeze drops the lowest tier rather than leaving ev
 | 8 | Integrity | Run hashes, chain position, and a verification control |
 | 9 | Caveats | The eight notes below, in full |
 
-The caveat notes, carried over because they are what separates a serious instrument from one that overclaims: remote content stays encrypted; local agent content is obtainable; more metadata exists than is collected; volume comes from connection tracking; collection is hourly; collection follows the desktop session; container attribution is unverified; detection confidence is not certainty.
+The caveat notes, carried over because they are what separates a serious instrument from one that overclaims: remote content stays encrypted; local agent content is obtainable; more metadata exists than is collected; volume comes from connection tracking; collection is hourly; collection follows the desktop session; container attribution is unverified; detection confidence is not certainty. The volume note speaks of byte counts "where present", because they have two cases: a demonstration record carries measured byte counts, and a collected record carries none and reports volume as unavailable (L4, D20). Separately, `aggregates.total_connections` and `aggregates.dropped` carry the window's counts in a collected record and the daemon's lifetime counters in a demonstration record (L8, D21).
 
 **Tier B, should ship**
 
@@ -311,7 +311,7 @@ These three decisions are binding and were taken deliberately.
 | A column the collector reads (`node`, `src_ip`, `dst_host`, `uid`, `pid`, `process`), or one of the `nodes`, `rules` and `sockets` tables | `partial` |
 | A column it never reads (`src_port`, `process_args`, `process_cwd`, `rule`) | Unchanged. The absence is named in the note (D14) |
 
-An empty `sockets` table is normal and does not lower the status. The `hosts`, `procs`, `addrs`, `ports` and `users` tables are lifetime counters and are never read. Every aggregate is counted from the window's rows.
+An empty `sockets` table is normal and does not lower the status. The `hosts`, `procs`, `addrs`, `ports` and `users` tables are lifetime counters and are never read. Every aggregate list is counted from the window's rows. `aggregates.total_connections` and `aggregates.dropped` are counted from the window only where daemon state does not supply them, as with this collector. Where daemon state supplies them, as the demonstration generator does, they repeat the daemon's lifetime counters instead (L8).
 
 **Writing.** Each record is written atomically with mode 0640. A runs directory the collector creates gets mode 0750. A lock file stops overlapping runs. Each window is collected at most once, and a window overlapping a stored one is refused. The chain continues from the newest record. Full records older than `retention_days` are trimmed, never deleted, and a trim that would drop destinations fails loudly (D9). `--settings` accepts only the settings in 7.8 (D19).
 
@@ -463,7 +463,7 @@ Every item must pass before the repository is made public.
 | D18 | A rule's `operator_data` is capped at 512 characters with the cut marked, so one large rule cannot push records past the full-record cap and stop collection | 10 November 2026 |
 | D19 | The collector's `--settings` accepts only the settings in 7.8 and refuses analysis thresholds. The tab validates every record against the default caps, so a record built with other thresholds would show as malformed | 10 November 2026 |
 | D20 | A collected record carries `volume` with `available` false rather than omitting it, because `volume` is mandatory in the full form (7.3) | 10 November 2026 |
-| D21 | The two meanings of `aggregates.total_connections` and `aggregates.dropped` are recorded as limitation L8 and not fixed in version 1. A single meaning needs the engine to stop taking them from daemon state, the demonstration records and the screenshots taken from them to be regenerated, and the daemon state panel to be relabelled and checked again, and the deadline in section 8 leaves no time for that. Because no detection, total or score reads either field, the effect is confined to that panel. Fixing it is a v0.2.0 item, alongside account-name masking (D16) | 10 November 2026 |
+| D21 | The two meanings of `aggregates.total_connections` and `aggregates.dropped` are recorded as limitation L8 and not fixed in version 1. A single meaning needs the engine to stop taking them from daemon state, the demonstration records and the screenshots taken from them to be regenerated, and the daemon state panel to be relabelled and checked again, and the deadline in section 8 leaves no time for that. Because no detection, total or score reads either field, the effect is confined to that panel. Fixing it is a v0.2.0 item, alongside account-name masking (D16). The dashboard's caveat text is left unchanged deliberately: it already says byte counts are shown "where present", and editing it would invalidate the published screenshots and the recorded demonstration video | 10 November 2026 |
 
 ## 15. Sources
 

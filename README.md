@@ -56,6 +56,8 @@ Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot;
 
 **v0.1.0, tagged and signed.** Both halves are built. The viewer runs inside a Hermes dashboard and has been checked panel by panel against a live instance; the reference collector reads an OpenSnitch database and writes hash-chained records. Demonstration mode needs nothing beyond Hermes, so the plugin can be judged before it is pointed at a real machine.
 
+Submitted to the Hermes plugin catalogue in [pull request #152546](https://github.com/NousResearch/hermes-agent/pull/152546), awaiting maintainer review.
+
 > 💡 **What alpha means here.** The analysis rules, the record schema and the integrity chain are settled and covered by 264 tests. What has not happened is exposure to other people's machines, other distributions, other OpenSnitch versions, and histories larger than a few dozen runs. Treat a finding as a reason to look, never as a verdict.
 
 ---
@@ -252,7 +254,7 @@ Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configura
 | `fixtures` | Synthetic demonstration records, documentation ranges only | ✅ Built |
 | `tests` | 264 tests covering the analysis rules, the chain, redaction, the routes, the bundle and the collector | ✅ Built |
 | `tools` | Demonstration generator and the history scanner that gates publication | ✅ Built |
-| `docs` | Requirements, release checklist, banner, screenshots | ✅ Built |
+| `docs` | Requirements, release checklist, reference architecture diagram, banner, screenshots | ✅ Built |
 | `.github/workflows` | Tests, plugin validation, history and fixture scans | 🚧 Not started |
 
 ---
@@ -292,7 +294,7 @@ The scanner reads its word list from `.scan-words`, which is deliberately gitign
 | Dashboard | Backend routes and the tab, with demonstration data | ✅ Delivered |
 | Collector | Reference script for the OpenSnitch statistics database | ✅ Delivered |
 | Release | Validation, screenshots, v0.1.0 tagged | ✅ Delivered |
-| Catalogue | Submission to the Hermes plugin catalogue | 🚧 In progress |
+| Catalogue | Submission to the Hermes plugin catalogue, [pull request #152546](https://github.com/NousResearch/hermes-agent/pull/152546) | 📨 Submitted, awaiting review |
 | v0.2.0 | Masking of account names, a single meaning for `aggregates.total_connections` and `aggregates.dropped`, analysis thresholds as settings, continuous integration, wider platform testing | 📋 Planned |
 
 ---

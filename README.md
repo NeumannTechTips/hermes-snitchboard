@@ -8,16 +8,17 @@
 [OpenSnitch](https://github.com/evilsocket/opensnitch) connection evidence into a plain-language,
 tamper-evident view of what your machine really connected to.**
 
+[![Release](https://img.shields.io/badge/release-v0.1.0-1F5FBF)](#-project-status)
 [![Status](https://img.shields.io/badge/status-alpha-orange)](#-project-status)
 [![Hermes Agent](https://img.shields.io/badge/hermes--agent-%3E%3D0.23.0-1F5FBF)](#-requirements)
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)](#-requirements)
 [![Runtime dependencies](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)](#-conventions)
 [![Telemetry](https://img.shields.io/badge/telemetry-none-00897B)](#-what-it-will-not-do)
-[![Tests](https://img.shields.io/badge/tests-unittest-brightgreen)](#-development)
+[![Tests](https://img.shields.io/badge/tests-264%20passing-brightgreen)](#-development)
 [![Commits](https://img.shields.io/badge/commits-signed-brightgreen)](#-conventions)
 [![Licence](https://img.shields.io/badge/licence-MIT%20OR%20Apache--2.0-blue)](#-licence)
 
-Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot; Requirements version 1.2 &middot; Reviewed: November 2026
+Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot; Requirements version 1.3 &middot; Reviewed: November 2026
 
 `#HermesAgent` `#OpenSnitch` `#MITREATTACK` `#EgressMonitoring` `#AgenticAI` `#AIGovernance` `#Linux` `#SecurityTooling` `#TamperEvident` `#Observability` `#ZeroTelemetry` `#Python`
 
@@ -39,6 +40,7 @@ Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot;
 - [What it will not do](#-what-it-will-not-do)
 - [Requirements](#-requirements)
 - [Installation](#-installation)
+- [Collecting real data](#-collecting-real-data)
 - [Settings](#-settings)
 - [Repository map](#-repository-map)
 - [Development](#-development)
@@ -54,9 +56,9 @@ Maintained by **[NeumannTechTips](https://github.com/NeumannTechTips)** &middot;
 
 ## 🚦 Project status
 
-**Alpha. The viewer is built, deployed and verified panel by panel in a running Hermes dashboard.** Every interface described below exists and renders; demonstration mode needs nothing beyond Hermes itself.
+**v0.1.0, tagged and signed.** Both halves are built. The viewer runs inside a Hermes dashboard and has been checked panel by panel against a live instance; the reference collector reads an OpenSnitch database and writes hash-chained records. Demonstration mode needs nothing beyond Hermes, so the plugin can be judged before it is pointed at a real machine.
 
-> 💡 **What alpha means here.** The analysis rules, the record schema and the integrity chain are settled and covered by tests. What has not happened yet is exposure to other people's machines, other Linux distributions and histories larger than a few dozen runs. Treat findings as a reason to look, never as a verdict.
+> 💡 **What alpha means here.** The analysis rules, the record schema and the integrity chain are settled and covered by 264 tests. What has not happened is exposure to other people's machines, other distributions, other OpenSnitch versions, and histories larger than a few dozen runs. Treat a finding as a reason to look, never as a verdict.
 
 ---
 
@@ -133,8 +135,10 @@ Taken from demonstration mode, so every address and name in them is synthetic.
 |---|---|
 | <img src="docs/screenshots/01-summary-and-coverage.png" alt="Summary tiles and the hourly coverage strip, with two hours shown as gaps" width="420"> | <img src="docs/screenshots/02-findings.png" alt="Findings with severity, ATT&CK technique and tactic, evidence lines and a recommendation" width="420"> |
 | **Summary and coverage.** Missing hours read as gaps. | **Findings.** Technique, evidence, one next step. |
-| <img src="docs/screenshots/03-beacons-and-novel.png" alt="Beacons table with both readings per row, and novel destinations ranked by rarity" width="420"> | <img src="docs/screenshots/05-integrity.png" alt="Integrity panel reporting the chain intact across the stored runs" width="420"> |
-| **Beacons and novelty.** Both readings, every time. | **Integrity.** Recomputed on request. |
+| <img src="docs/screenshots/03-beacons-and-novel.png" alt="Beacons table with both readings per row, and novel destinations ranked by rarity" width="420"> | <img src="docs/screenshots/04-chart-and-events.png" alt="Connections chart with a marked gap for a run that collected nothing, above the events table" width="420"> |
+| **Beacons and novelty.** Both readings, every time. | **Chart and events.** A run that collected nothing is marked, not zeroed. |
+| <img src="docs/screenshots/05-integrity.png" alt="Integrity panel reporting the chain intact across the stored runs" width="420"> | |
+| **Integrity.** Recomputed on request. | |
 
 ---
 
@@ -168,8 +172,10 @@ Taken from demonstration mode, so every address and name in them is synthetic.
 
 ## 📦 Installation
 
+Install straight from this repository:
+
 ```bash
-hermes plugins install hermes-snitchboard
+hermes plugins install NeumannTechTips/hermes-snitchboard
 hermes plugins enable hermes-snitchboard
 ```
 
@@ -185,6 +191,27 @@ hermes dashboard
 The tab appears in the sidebar under Plugins, and opens at `/hermes-snitchboard`.
 
 > 💡 **Nothing further is needed to look around.** With no run records present the tab loads demonstration data and labels every panel accordingly, so you can judge the thing before pointing it at your own machine.
+
+> 💡 **Checking what you installed.** Every commit is signed and shows as Verified on GitHub, and releases are tagged. `git verify-tag v0.1.0` in a clone confirms the tag, and `git log --show-signature` confirms the commits.
+
+---
+
+## 🛰️ Collecting real data
+
+The dashboard shows demonstration data until run records exist. Writing them is the collector's job, and it runs under your own account rather than under Hermes.
+
+```bash
+python3 collector/snitchboard_collect.py \
+  --db /path/to/opensnitch.db \
+  --runs-dir ~/.hermes/plugin-data/hermes-snitchboard/runs \
+  --dry-run
+```
+
+`--db` has no default, deliberately: OpenSnitch keeps its statistics in memory unless you configure a file, so there is no path worth guessing. The dry run reports what it would write without writing anything, and prints no address, host name or process path.
+
+Drop `--dry-run` to write a record, then point the plugin's `runs_dir` setting at the same directory. [`collector/systemd/`](collector/systemd) holds user timer templates for running it hourly, and [`collector/README.md`](collector/README.md) covers permissions when Hermes runs under a separate account.
+
+> ⚠️ **Read the three limits above first.** Time zone, the repeated hour at a clock change, and the GUI needing to be open all shape what a collected record can and cannot tell you.
 
 ---
 
@@ -217,11 +244,11 @@ Set under `plugins.entries.hermes-snitchboard.settings` in your Hermes configura
 |---|---|---|
 | `snitchboard` | Analysis engine: schema, canonical hashing, chain, analysis, detection, severity, ATT&CK mapping, redaction, configuration | ✅ Built |
 | `dashboard` | Manifest, seven read-only API routes, and the tab bundle | ✅ Built |
+| `collector` | Reference collector and its systemd user timer templates | ✅ Built |
 | `fixtures` | Synthetic demonstration records, documentation ranges only | ✅ Built |
-| `tests` | Unit tests covering every analysis rule, the chain, redaction, the routes and the bundle | ✅ Built |
+| `tests` | 264 tests covering the analysis rules, the chain, redaction, the routes, the bundle and the collector | ✅ Built |
 | `tools` | Demonstration generator and the history scanner that gates publication | ✅ Built |
 | `docs` | Requirements, release checklist, banner, screenshots | ✅ Built |
-| `collector` | Reference collector and its systemd user timer templates | ✅ Built |
 | `.github/workflows` | Tests, plugin validation, history and fixture scans | 🚧 Not started |
 
 ---
@@ -234,6 +261,8 @@ python3 tools/gen_demo.py --help               # regenerate the demonstration fi
 python3 tools/scan_history.py                  # the publication gate, reads every blob ever committed
 ```
 
+The suite builds a synthetic OpenSnitch database from [`tests/fixtures/opensnitch_sample.sql`](tests/fixtures/opensnitch_sample.sql) in a temporary directory, so no firewall and no network are needed to exercise the collector.
+
 The scanner reads its word list from `.scan-words`, which is deliberately gitignored. Without that file it reports the word check as skipped rather than passing, so a missing list can never be mistaken for a clean result.
 
 ---
@@ -243,6 +272,7 @@ The scanner reads its word list from `.scan-words`, which is deliberately gitign
 | Document | What it gives you |
 |---|---|
 | [`docs/HSB-PRD-001-Product-Requirements.md`](docs/HSB-PRD-001-Product-Requirements.md) | Problem, success criteria, scope, design, analysis rules, security and privacy requirements, build plan, risks and the decisions taken |
+| [`collector/README.md`](collector/README.md) | Collector setup, permissions across accounts, status rules and the limits of the OpenSnitch schema |
 | [`docs/HSB-REL-001-Release-and-Recording-Checklist.md`](docs/HSB-REL-001-Release-and-Recording-Checklist.md) | Publication gate, capture discipline and the submission runbook |
 
 > ⚠️ **The requirements govern.** When a decision changes, revise the requirements document first. Code follows from it, never the reverse.
@@ -257,7 +287,8 @@ The scanner reads its word list from `.scan-words`, which is deliberately gitign
 | Core | Run record schema, canonical hashing, analysis engine, tests | ✅ Delivered |
 | Dashboard | Backend routes and the tab, with demonstration data | ✅ Delivered |
 | Collector | Reference script for the OpenSnitch statistics database | ✅ Delivered |
-| Release | Validation, screenshots, catalogue submission | 🚧 In progress |
+| Release | Validation, screenshots, v0.1.0 tagged | ✅ Delivered |
+| Catalogue | Submission to the Hermes plugin catalogue | 🚧 In progress |
 | v0.2.0 | Masking of account names, a single meaning for `aggregates.total_connections` and `aggregates.dropped`, analysis thresholds as settings, continuous integration, wider platform testing | 📋 Planned |
 
 ---

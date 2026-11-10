@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/banner.png"
-     alt="Hermes Snitchboard: tamper-evident outbound connection audit for Hermes Agent, shown as a sample connection log with allow, beacon, novel and deny entries"
-     width="1200">
+![Hermes Snitchboard: tamper-evident outbound connection audit for Hermes Agent, shown as a sample connection log with allow, beacon, novel and deny entries](docs/assets/banner.png)
 
 **A dashboard plugin for [Hermes Agent](https://github.com/NousResearch/hermes-agent) that turns
 [OpenSnitch](https://github.com/evilsocket/opensnitch) connection evidence into a plain-language,
@@ -76,11 +74,11 @@ OpenSnitch already sees every outbound connection and the process behind it. Tha
 
 Two parts, kept apart on purpose.
 
-![Hermes Snitchboard reference architecture: a controls band governing a collection plane, an evidence store of hash-chained run records, and a presentation plane inside the Hermes dashboard](docs/assets/hermes-snitchboard-reference-architecture.png)
+[![Hermes Snitchboard reference architecture: a controls band governing a collection plane, an evidence store of hash-chained run records, and a presentation plane inside the Hermes dashboard](docs/assets/hermes-snitchboard-reference-architecture.png)](docs/assets/hermes-snitchboard-reference-architecture.png)
 
 *HSB-ARC-001. Seventeen numbered objects, coloured by classification rather than by type, so the view survives a greyscale print. Source: [`hermes-snitchboard-reference-architecture.drawio`](docs/assets/hermes-snitchboard-reference-architecture.drawio).*
 
-In short:
+The same path, named by file:
 
 ```
  OpenSnitch statistics database        read-only, your own account
@@ -139,11 +137,11 @@ Taken from demonstration mode, so every address and name in them is synthetic.
 
 | | |
 |---|---|
-| <img src="docs/screenshots/01-summary-and-coverage.png" alt="Summary tiles and the hourly coverage strip, with two hours shown as gaps" width="420"> | <img src="docs/screenshots/02-findings.png" alt="Findings with severity, ATT&CK technique and tactic, evidence lines and a recommendation" width="420"> |
+| ![Summary tiles and the hourly coverage strip, with two hours shown as gaps](docs/screenshots/01-summary-and-coverage.png) | ![Findings with severity, ATT&CK technique and tactic, evidence lines and a recommendation](docs/screenshots/02-findings.png) |
 | **Summary and coverage.** Missing hours read as gaps. | **Findings.** Technique, evidence, one next step. |
-| <img src="docs/screenshots/03-beacons-and-novel.png" alt="Beacons table with both readings per row, and novel destinations ranked by rarity" width="420"> | <img src="docs/screenshots/04-chart-and-events.png" alt="Connections chart with a marked gap for a run that collected nothing, above the events table" width="420"> |
+| ![Beacons table with both readings per row, and novel destinations ranked by rarity](docs/screenshots/03-beacons-and-novel.png) | ![Connections chart with a marked gap for a run that collected nothing, above the events table](docs/screenshots/04-chart-and-events.png) |
 | **Beacons and novelty.** Both readings, every time. | **Chart and events.** A run that collected nothing is marked, not zeroed. |
-| <img src="docs/screenshots/05-integrity.png" alt="Integrity panel reporting the chain intact across the stored runs" width="420"> | |
+| ![Integrity panel reporting the chain intact across the stored runs](docs/screenshots/05-integrity.png) | |
 | **Integrity.** Recomputed on request. | |
 
 ---
